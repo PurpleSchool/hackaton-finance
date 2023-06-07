@@ -2,8 +2,9 @@ import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 
-config();
-
+config({
+  path: '../../envs/.backend.env',
+});
 const configService = new ConfigService();
 export default new DataSource({
   type: 'postgres',
