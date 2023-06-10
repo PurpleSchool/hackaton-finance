@@ -20,9 +20,6 @@ export class BillEntity {
   id: number;
 
   @Column()
-  name: string;
-
-  @Column()
   user_id: number;
 
   @Column()
