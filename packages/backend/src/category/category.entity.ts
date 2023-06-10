@@ -1,14 +1,16 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Transaction } from '../bill/transaction/transaction.entity';
+import { TransactionEntity } from '../bill/transaction/transaction.entity';
 
-@Entity()
-export class Category {
+@Entity({
+  name: 'category',
+})
+export class CategoryEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   name: string;
 
-  @OneToMany((type) => Transaction, (transaction) => transaction.category)
-  transactions: Transaction[];
+  @OneToMany((type) => TransactionEntity, (transaction) => transaction.category)
+  transactions: TransactionEntity[];
 }

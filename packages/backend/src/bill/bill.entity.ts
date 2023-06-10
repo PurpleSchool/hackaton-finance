@@ -7,13 +7,15 @@ import {
   JoinColumn,
   CreateDateColumn,
 } from 'typeorm';
-import { User } from '../user/user.entity';
-import { Account } from '../account/account.entity';
-import { Currency } from '../currency/currency.entity';
-import { Transaction } from './transaction/transaction.entity';
+import { UserEntity } from '../user/user.entity';
+import { AccountEntity } from '../account/account.entity';
+import { CurrencyEntity } from '../currency/currency.entity';
+import { TransactionEntity } from './transaction/transaction.entity';
 
-@Entity()
-export class Bill {
+@Entity({
+  name: 'bill',
+})
+export class BillEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -41,18 +43,18 @@ export class Bill {
   @CreateDateColumn()
   created_at: Date;
 
-  @ManyToOne((type) => User, (user) => user.bills)
+  @ManyToOne((type) => UserEntity, (user) => user.bills)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: UserEntity;
 
-  @ManyToOne((type) => Account, (account) => account.bills)
+  @ManyToOne((type) => AccountEntity, (account) => account.bills)
   @JoinColumn({ name: 'account_id' })
-  account: Account;
+  account: AccountEntity;
 
-  @ManyToOne((type) => Currency, (currency) => currency.bills)
+  @ManyToOne((type) => CurrencyEntity, (currency) => currency.bills)
   @JoinColumn({ name: 'currency_id' })
-  currency: Currency;
+  currency: CurrencyEntity;
 
-  @OneToMany((type) => Transaction, (transaction) => transaction.bill)
-  transactions: Transaction[];
+  @OneToMany((type) => TransactionEntity, (transaction) => transaction.bill)
+  transactions: TransactionEntity[];
 }

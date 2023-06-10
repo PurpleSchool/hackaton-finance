@@ -1,8 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Bill } from '../bill/bill.entity';
+import { BillEntity } from '../bill/bill.entity';
 
-@Entity()
-export class Currency {
+@Entity({
+  name: 'currency',
+})
+export class CurrencyEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -12,6 +14,6 @@ export class Currency {
   @Column()
   code: string;
 
-  @OneToMany((type) => Bill, (bill) => bill.currency)
-  bills: Bill[];
+  @OneToMany((type) => BillEntity, (bill) => bill.currency)
+  bills: BillEntity[];
 }

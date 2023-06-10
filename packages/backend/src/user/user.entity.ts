@@ -1,18 +1,20 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Account } from '../account/account.entity';
-import { Bill } from '../bill/bill.entity';
+import { AccountEntity } from '../account/account.entity';
+import { BillEntity } from '../bill/bill.entity';
 
-@Entity()
-export class User {
+@Entity({
+  name: 'user',
+})
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   name: string;
 
-  @OneToMany((type) => Account, (account) => account.user)
-  accounts: Account[];
+  @OneToMany((type) => AccountEntity, (account) => account.user)
+  accounts: AccountEntity[];
 
-  @OneToMany((type) => Bill, (bill) => bill.user)
-  bills: Bill[];
+  @OneToMany((type) => BillEntity, (bill) => bill.user)
+  bills: BillEntity[];
 }

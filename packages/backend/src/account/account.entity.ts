@@ -6,11 +6,13 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
-import { User } from '../user/user.entity';
-import { Bill } from '../bill/bill.entity';
+import { UserEntity } from '../user/user.entity';
+import { BillEntity } from '../bill/bill.entity';
 
-@Entity()
-export class Account {
+@Entity({
+  name: 'account',
+})
+export class AccountEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,10 +22,10 @@ export class Account {
   @Column()
   owner_id: number;
 
-  @OneToMany((type) => Bill, (bill) => bill.account)
-  bills: Bill[];
+  @OneToMany((type) => BillEntity, (bill) => bill.account)
+  bills: BillEntity[];
 
-  @ManyToOne((type) => User, (user) => user.accounts)
+  @ManyToOne((type) => UserEntity, (user) => user.accounts)
   @JoinColumn({ name: 'owner_id' })
-  user: User;
+  user: UserEntity;
 }

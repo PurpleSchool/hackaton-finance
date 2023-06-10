@@ -14,6 +14,6 @@ export default new DataSource({
   password: configService.get('DB_PASSWORD'),
   port: Number(configService.get('DB_PORT')),
   logging: true,
-  entities: [],
-  migrations: [],
+  entities: ['dist/**/*.entity.js'],
+  migrations: ['dist/migrations/*.js'],
 });

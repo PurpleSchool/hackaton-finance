@@ -6,11 +6,13 @@ import {
   JoinColumn,
   CreateDateColumn,
 } from 'typeorm';
-import { Bill } from '../bill.entity';
-import { Category } from '../../category/category.entity';
+import { BillEntity } from '../bill.entity';
+import { CategoryEntity } from '../../category/category.entity';
 
-@Entity()
-export class Transaction {
+@Entity({
+  name: 'transaction',
+})
+export class TransactionEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -26,11 +28,11 @@ export class Transaction {
   @CreateDateColumn()
   created_at: Date;
 
-  @ManyToOne((type) => Bill, (bill) => bill.transactions)
+  @ManyToOne((type) => BillEntity, (bill) => bill.transactions)
   @JoinColumn({ name: 'bill_id' })
-  bill: Bill;
+  bill: BillEntity;
 
-  @ManyToOne((type) => Category, (category) => category.transactions)
+  @ManyToOne((type) => CategoryEntity, (category) => category.transactions)
   @JoinColumn({ name: 'category_id' })
-  category: Category;
+  category: CategoryEntity;
 }
