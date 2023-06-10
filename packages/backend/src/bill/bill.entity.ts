@@ -3,12 +3,14 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  OneToMany,
   JoinColumn,
   CreateDateColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Account } from '../account/account.entity';
 import { Currency } from '../currency/currency.entity';
+import { Transaction } from './transaction/transaction.entity';
 
 @Entity()
 export class Bill {
@@ -50,4 +52,7 @@ export class Bill {
   @ManyToOne((type) => Currency, (currency) => currency.bills)
   @JoinColumn({ name: 'currency_id' })
   currency: Currency;
+
+  @OneToMany((type) => Transaction, (transaction) => transaction.bill)
+  transactions: Transaction[];
 }
