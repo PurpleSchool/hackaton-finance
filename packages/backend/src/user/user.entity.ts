@@ -12,6 +12,9 @@ export class UserEntity {
   @Column()
   name: string;
 
+  @Column()
+  password: string;
+
   @OneToMany((type) => AccountEntity, (account) => account.user)
   accounts: AccountEntity[];
 
