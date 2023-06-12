@@ -1,30 +1,24 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  Post,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, UsePipes } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDto } from './dto/user.dto';
+import { UserDto, UserSchema } from './dto/user.dto';
+import { ZodValidationPipe } from 'src/pipes/zod-validation.pipe';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ZodValidationPipe(UserSchema))
   @Post('register')
   async register(@Body() dto: UserDto) {
-    const newUser = await this.userService.createUser(dto);
+    const newUser = await this.userService.createUser(dto.name, dto.password);
     return { name: newUser.name };
   }
 
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ZodValidationPipe(UserSchema))
   @HttpCode(200)
   @Post('login')
   async login(@Body() dto: UserDto) {
-    const user = await this.userService.validateUser(dto);
+    const user = await this.userService.validateUser(dto.name, dto.password);
     return this.userService.login(user.name);
   }
 }

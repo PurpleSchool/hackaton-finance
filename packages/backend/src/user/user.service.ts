@@ -7,7 +7,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { JwtService } from '@nestjs/jwt';
-import { UserDto } from './dto/user.dto';
 import { compare, genSalt, hash } from 'bcryptjs';
 import {
   ALREADY_REGISTERED_ERROR,
@@ -27,26 +26,26 @@ export class UserService {
     return this.usersRepository.findOne({ where: { name } });
   }
 
-  async createUser(dto: UserDto) {
-    const userExist = await this.findUser(dto.name);
+  async createUser(name: string, password: string) {
+    const userExist = await this.findUser(name);
     if (userExist) {
       throw new BadRequestException(ALREADY_REGISTERED_ERROR);
     }
 
     const salt = await genSalt(10);
     return this.usersRepository.save({
-      name: dto.name,
-      password: await hash(dto.password, salt),
+      name: name,
+      password: await hash(password, salt),
     });
   }
 
-  async validateUser(dto: UserDto) {
-    const user = await this.findUser(dto.name);
+  async validateUser(name: string, password: string) {
+    const user = await this.findUser(name);
     if (!user) {
       throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
     }
 
-    const correctPassword = await compare(dto.password, user.password);
+    const correctPassword = await compare(password, user.password);
     if (!correctPassword) {
       throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
     }
