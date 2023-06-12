@@ -1,8 +1,8 @@
-import * as z from 'zod';
+import { z } from 'nestjs-zod/z';
+import { createZodDto } from 'nestjs-zod';
 
 export const UserSchema = z.object({
   name: z.string().min(1).max(128),
-  password: z.string().min(3).max(255),
+  password: z.string().min(3).max(256),
 });
-
-export type UserDto = z.infer<typeof UserSchema>;
+export class UserDto extends createZodDto(UserSchema) {}
