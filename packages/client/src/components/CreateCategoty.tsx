@@ -1,8 +1,8 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { $categoryStore, Category, addCategory } from "../api/fake/fakeApi";
+
 import { useStore } from "effector-react";
 import { TextField } from "@mui/material";
-import CategoryIcon from "./CategoryIcon";
+
 import { useState } from "react";
 import MuiIcons from "../helpers/MuiIconList";
 

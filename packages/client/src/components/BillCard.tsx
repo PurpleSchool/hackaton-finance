@@ -1,12 +1,31 @@
 import { Card, CardContent, Typography } from "@mui/material";
-import CategoryIcon from "./CategoryIcon";
-import { $categoryStore, BillProps } from "../api/fake/fakeApi";
 import { useStore } from "effector-react";
+import { BillType } from "../api/fake/billApi";
+import { $categorysStore } from "../api/fake/categoryApi";
+import { $transactionsStore } from "../api/fake/transactionsApi";
+import { $currencysStore } from "../api/fake/currencyApi";
 
-export default function Bill(props: BillProps) {
-  const category = useStore($categoryStore).filter(
-    (category) => category.name === props.category
-  )[0];
+export default function BillCard(props: BillType) {
+  const categoryes = useStore($categorysStore);
+  const transactions = useStore($transactionsStore);
+  const currencyes = useStore($currencysStore);
+
+  const category = categoryes.filter(
+    (category) =>
+      category.id ===
+      transactions
+        .filter((transaction) => transaction.bill_id === props.id)
+        .sort((a, b) => b.value - a.value)[0].category_id
+  )[0].name;
+
+  const totalValue = transactions
+    .filter((transaction) => transaction.bill_id === props.id)
+    .reduce((sum, transaction) => sum + transaction.value, 0);
+
+  const currency = currencyes.filter(
+    (currency) => currency.id === props.currency_id
+  )[0].sign;
+
   return (
     <Card
       sx={{
@@ -26,10 +45,9 @@ export default function Bill(props: BillProps) {
           width: "100%",
         }}
       >
-        <CategoryIcon icon={category.icon} color={category.color}/>
         <div style={{ marginLeft: "23px" }}>
           <Typography fontSize={16} fontWeight={500}>
-            {props.category}
+            {category}
           </Typography>
           <Typography
             fontSize={14}
@@ -48,8 +66,8 @@ export default function Bill(props: BillProps) {
           }}
         >
           {props.type ? "" : "-"}
-          {props.currency}
-          {props.totalValue}
+          {currency}
+          {totalValue}
         </Typography>
       </CardContent>
     </Card>

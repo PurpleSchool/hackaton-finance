@@ -5,21 +5,19 @@ import {
   AutocompleteChangeReason,
   Button,
 } from "@mui/material";
-import { useStore } from "effector-react";
-import { $categoryStore } from "../api/fake/fakeApi";
 import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react";
-import { transaction } from "./BillForm";
-import CreateCategoty from "./CreateCategoty";
+import { TransactionType } from "../api/fake/transactionsApi";
+import { $categorysStore } from "../api/fake/categoryApi";
+import { useStore } from "effector-react";
 
-type transactionProps = {
-  setTransactions: Dispatch<SetStateAction<transaction[]>>;
-  transactions: transaction[];
-  id: number;
+type TransactionFormProps = {
+  transaction: TransactionType;
+  transactions: TransactionType[];
+  setTransactions: Dispatch<SetStateAction<TransactionType[]>>;
 };
 
-export default function Transaction(props: transactionProps) {
-  const categories = useStore($categoryStore).map((category) => category.name);
-
+export default function TransactionForm(props: TransactionFormProps) {
+  const categories = useStore($categorysStore);
   const [isNewCategoryRequired, setIsNewCategoryRequired] = useState(false);
 
   const handleChangeCategory = (
@@ -29,32 +27,40 @@ export default function Transaction(props: transactionProps) {
     details?: AutocompleteChangeDetails<string> | undefined
   ): void => {
     const newTransactions = props.transactions.map((transaction) =>
-      transaction.id === props.id
+      transaction.id === props.transaction.id
         ? {
             id: transaction.id,
-            category: value || "",
+            category_id: categories.filter(
+              (category) => category.name === value
+            )[0].id,
             value: transaction.value,
+            bill_id: transaction.bill_id,
+            
           }
         : transaction
     );
     props.setTransactions(newTransactions);
   };
+
   const handleChangeValue = (event: { target: { value: string } }): void => {
     const newTransactions = props.transactions.map((transaction) =>
-      transaction.id === props.id
+      transaction.id === props.transaction.id
         ? {
             id: transaction.id,
-            category: transaction.category,
+            category_id: transaction.category_id,
             value: Number(event.target.value),
+            bill_id: transaction.bill_id,
+            
           }
         : transaction
     );
     props.setTransactions(newTransactions);
   };
+
   const handleDeleteTransaction = (): void => {
     props.setTransactions([
       ...props.transactions.filter(
-        (transaction) => transaction.id !== props.id
+        (transaction) => transaction.id !== props.transaction.id
       ),
     ]);
   };
@@ -66,7 +72,7 @@ export default function Transaction(props: transactionProps) {
       </Button>
       <Autocomplete
         onClick={() => setIsNewCategoryRequired(false)}
-        options={categories}
+        options={categories.map((category) => category.name)}
         renderInput={(params) => <TextField {...params} label="Сategory" />}
         onChange={handleChangeCategory}
         noOptionsText={
@@ -79,7 +85,7 @@ export default function Transaction(props: transactionProps) {
           </Button>
         }
       />
-      {isNewCategoryRequired ? <CreateCategoty /> : null}
+      {/* {isNewCategoryRequired ? <CreateCategoty /> : null} */}
 
       <TextField
         type="number"
