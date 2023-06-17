@@ -6,14 +6,17 @@ import {
   Button,
 } from "@mui/material";
 import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react";
-import { TransactionType } from "../api/fake/transactionsApi";
+import { ITransactionWithId, ITransaction } from "../api/fake/transactionsApi";
 import { $categorysStore } from "../api/fake/categoryApi";
 import { useStore } from "effector-react";
+import { TransactionsType, isTransactionOld } from "./BillForm";
+import CreateCategoty from "./CreateCategoty";
 
 type TransactionFormProps = {
-  transaction: TransactionType;
-  transactions: TransactionType[];
-  setTransactions: Dispatch<SetStateAction<TransactionType[]>>;
+  transaction: ITransactionWithId | ITransaction;
+  transactions: TransactionsType[];
+  setTransactions: Dispatch<SetStateAction<TransactionsType[]>>;
+  
 };
 
 export default function TransactionForm(props: TransactionFormProps) {
@@ -27,40 +30,57 @@ export default function TransactionForm(props: TransactionFormProps) {
     details?: AutocompleteChangeDetails<string> | undefined
   ): void => {
     const newTransactions = props.transactions.map((transaction) =>
-      transaction.id === props.transaction.id
+      isTransactionOld(transaction)
+        ? transaction.category_id === props.transaction.category_id
+          ? {
+              id: transaction.id,
+              category_id: categories.filter(
+                (category) => category.name === value
+              )[0].id,
+              value: transaction.value,
+              bill_id: transaction.bill_id,
+            }
+          : transaction
+        : transaction.category_id === props.transaction.category_id
         ? {
-            id: transaction.id,
             category_id: categories.filter(
               (category) => category.name === value
             )[0].id,
             value: transaction.value,
-            bill_id: transaction.bill_id,
-            
           }
         : transaction
     );
+
     props.setTransactions(newTransactions);
   };
 
   const handleChangeValue = (event: { target: { value: string } }): void => {
     const newTransactions = props.transactions.map((transaction) =>
-      transaction.id === props.transaction.id
+      isTransactionOld(transaction)
+        ? transaction.category_id === props.transaction.category_id
+          ? {
+              id: transaction.id,
+              category_id: transaction.category_id,
+              value: Number(event.target.value),
+              bill_id: transaction.bill_id,
+            }
+          : transaction
+        : transaction.category_id === props.transaction.category_id
         ? {
-            id: transaction.id,
             category_id: transaction.category_id,
             value: Number(event.target.value),
-            bill_id: transaction.bill_id,
-            
           }
         : transaction
     );
+
     props.setTransactions(newTransactions);
   };
 
   const handleDeleteTransaction = (): void => {
     props.setTransactions([
       ...props.transactions.filter(
-        (transaction) => transaction.id !== props.transaction.id
+        (transaction) =>
+          transaction.category_id !== props.transaction.category_id
       ),
     ]);
   };
@@ -85,7 +105,7 @@ export default function TransactionForm(props: TransactionFormProps) {
           </Button>
         }
       />
-      {/* {isNewCategoryRequired ? <CreateCategoty /> : null} */}
+      {isNewCategoryRequired ? <CreateCategoty /> : null}
 
       <TextField
         type="number"

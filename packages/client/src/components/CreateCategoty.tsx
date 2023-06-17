@@ -1,49 +1,20 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-
-import { useStore } from "effector-react";
 import { TextField } from "@mui/material";
-
-import { useState } from "react";
-import MuiIcons from "../helpers/MuiIconList";
+import { ICategory, addCategory } from "../api/fake/categoryApi";
 
 export default function CreateCategoty() {
-  const categoryes: Category[] = useStore($categoryStore);
-  const [isIcon, setIsIcon] = useState(false);
-  const [categoryName, setCategoryName] = useState("");
-  const [iconName, setIconName] = useState("");
-  const [color, setColor] = useState("");
-
-  const { register, handleSubmit, reset } = useForm<Category>();
-  const onSubmit: SubmitHandler<Category> = (data) => {
+  const { register, handleSubmit, reset } = useForm<ICategory>();
+  const onSubmit: SubmitHandler<ICategory> = (data) => {
     addCategory({
-      id: categoryes.length + 1,
       name: data.name,
-      icon: data.icon,
-      color: data.color,
     });
-
+    
     reset();
   };
 
-  const handleChangeCategoryName = (event: {
-    target: { value: string };
-  }): void => {
-    setCategoryName(event.target.value);
-  };
-  console.log(categoryName);
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      style={{ display: "flex", flexDirection: "column", marginTop: "40px" }}
-    >
-      <CategoryIcon icon={categoryName} color={color} />
-
-      <TextField
-        type="text"
-        {...register("name")}
-        label="Category Name"
-        onChange={handleChangeCategoryName}
-      />
+    <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: "40px" }}>
+      <TextField type="text" {...register("name")} label="Category Name" />
 
       <input type="submit" value={"Save Categoty"} />
     </form>

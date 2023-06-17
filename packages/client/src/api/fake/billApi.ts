@@ -1,17 +1,19 @@
 import { createEvent, createStore } from "effector";
 
-export type BillType = {
-  id: number;
+export interface IBill {
   user_id: number;
   account_id: number;
   currency_id: number;
   type: 0 | 1;
   status: 0 | 1;
   date: Date;
-  
-};
+}
 
-const fakeBills: BillType[] = [
+export interface IBillWithId extends IBill {
+  id: number;
+}
+
+const fakeBills: IBillWithId[] = [
   {
     id: 1,
     user_id: 1,
@@ -23,12 +25,18 @@ const fakeBills: BillType[] = [
   },
 ];
 
+
 export const removeBill = createEvent<number>();
-export const upsertBill = createEvent<BillType>();
-export const $billsStore = createStore<BillType[]>(fakeBills)
-  .on(removeBill, (store, payload) => [
-    ...store.filter((bill) => bill.id !== payload),
+export const addBill = createEvent<IBill>();
+export const changeBill = createEvent<IBillWithId>();
+
+export const $billsStore = createStore<IBillWithId[]>(fakeBills)
+  .on(removeBill, (store, id) => [...store.filter((bill) => bill.id !== id)])
+  .on(addBill, (store, bill) =>  [
+    ...store,
+    { id: store.sort((a, b) => a.id - b.id)[0].id + 1, ...bill },
   ])
-  .on(upsertBill, (store, changedBill) => [
-    ...store.filter((bill) => bill.id !== changedBill.id, changedBill),
+  .on(changeBill, (store, changedBill) => [
+    ...store.filter((bill) => bill.id !== changedBill.id),
+    changedBill,
   ]);

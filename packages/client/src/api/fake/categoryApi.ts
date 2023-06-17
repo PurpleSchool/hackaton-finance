@@ -1,19 +1,23 @@
 import { createEvent, createStore } from "effector";
 
-export type Category = {
-  id: number;
+export interface ICategory {
   name: string;
-  color: string;
-};
+}
+export interface ICategoryWithId extends ICategory {
+  id: number;
+}
 
-const fakeCategorys: Category[] = [
-  { id: 1, name: "Grossery", color: "blue" },
-  { id: 2, name: "Alcohol", color: "green" },
-  { id: 3, name: "Taxi", color: "yellow" },
+const fakeCategorys: ICategoryWithId[] = [
+  { id: 1, name: "Grossery" },
+  { id: 2, name: "Alcohol" },
+  { id: 3, name: "Taxi" },
 ];
 
-export const addCategory = createEvent<Category>();
-export const $categorysStore = createStore<Category[]>(fakeCategorys).on(
+export const addCategory = createEvent<ICategory>();
+export const $categorysStore = createStore<ICategoryWithId[]>(fakeCategorys).on(
   addCategory,
-  (store, category) => [...store, category]
+  (store, payload) => [
+    ...store,
+    { id: store.sort((a, b) => a.id - b.id)[0].id + 1, ...payload },
+  ]
 );

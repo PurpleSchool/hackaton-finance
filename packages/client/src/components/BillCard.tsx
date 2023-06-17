@@ -1,11 +1,11 @@
 import { Card, CardContent, Typography } from "@mui/material";
 import { useStore } from "effector-react";
-import { BillType } from "../api/fake/billApi";
+import { IBillWithId } from "../api/fake/billApi";
 import { $categorysStore } from "../api/fake/categoryApi";
 import { $transactionsStore } from "../api/fake/transactionsApi";
 import { $currencysStore } from "../api/fake/currencyApi";
 
-export default function BillCard(props: BillType) {
+export default function BillCard(props: IBillWithId) {
   const categoryes = useStore($categorysStore);
   const transactions = useStore($transactionsStore);
   const currencyes = useStore($currencysStore);

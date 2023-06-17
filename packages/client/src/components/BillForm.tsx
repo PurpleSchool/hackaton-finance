@@ -6,67 +6,100 @@ import {
   Select,
 } from "@mui/material";
 import { useStore } from "effector-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-import { $billsStore, BillType, upsertBill } from "../api/fake/billApi";
+import {
+  $billsStore,
+  IBillWithId,
+  IBill,
+  addBill,
+  changeBill,
+} from "../api/fake/billApi";
 import {
   $transactionsStore,
-  TransactionType,
-  upsertTransaction,
+  ITransactionWithId,
+  ITransaction,
+  addTransaction,
+  changeTransaction,
 } from "../api/fake/transactionsApi";
 import TransactionForm from "./TransactionForm";
 import { $currencysStore } from "../api/fake/currencyApi";
 
 type BillFormProps = {
   onClose: Dispatch<SetStateAction<boolean>>;
-  bill?: BillType;
+  bill?: IBillWithId;
 };
+export type TransactionsType = ITransactionWithId | ITransaction;
 
+export function isTransactionOld(
+  transaction: ITransactionWithId | ITransaction
+): transaction is ITransactionWithId {
+  return "id" in transaction;
+}
 export default function BillForm(props: BillFormProps) {
   const currencyList = useStore($currencysStore);
+  const { register, handleSubmit, reset, watch } = useForm<IBillWithId>();
   const bills = useStore($billsStore);
-  const bill = props.bill || {
-    id: 0,
+  
+
+  const [isNewTransactionEvalable, setIsNewTransactionAvalable] =
+    useState<boolean>(true);
+
+  const bill: IBillWithId | IBill = props.bill || {
     user_id: 1,
     account_id: 1,
     currency_id: 0,
     type: 0,
     status: 1,
-    date: Date.now(),
-    created_at: Date.now(),
+    date: new Date(Date.now()),
   };
-
-  const billsTransactions = useStore($transactionsStore).filter(
-    (transaction) => transaction.bill_id === bill.id
-  );
-
-  const [transactions, setTransactions] = useState<TransactionType[]>(
-    billsTransactions.length !== 0
-      ? billsTransactions
+  const [transactions, setTransactions] = useState<TransactionsType[]>(
+    isBillOld(bill)
+      ? useStore($transactionsStore).filter(
+          (transaction) => transaction.bill_id === bill.id
+        )
       : [
           {
-            id: 1,
-            bill_id: bill.id,
             category_id: 0,
             value: 0,
           },
         ]
   );
 
-  const { register, handleSubmit, reset } = useForm<BillType>();
+  useEffect(() => {
+    transactions.map((transaction) => transaction.category_id).includes(0)
+      ? setIsNewTransactionAvalable(false)
+      : setIsNewTransactionAvalable(true);
+  }, [transactions]);
+  function isBillOld(bill: IBillWithId | IBill): bill is IBillWithId {
+    return "id" in bill;
+  }
 
-  const onSubmit: SubmitHandler<BillType> = (data) => {
-    upsertBill({
-      id: bill.id === 0 ? bills.length + 1 : bill.id,
-      user_id: 1,
-      account_id: 1,
-      currency_id: data.currency_id,
-      type: data.type,
-      status: data.status,
-      date: new Date(Date.now()),
-    });
-    transactions.map((transaction) => upsertTransaction(transaction));
+  const onSubmit: SubmitHandler<IBillWithId> = (data) => {
+    if (isBillOld(bill)) {
+      changeBill(data);
+      transactions.map((transaction) => {
+        isTransactionOld(transaction)
+          ? changeTransaction(transaction)
+          : addTransaction({ bill_id: bill.id, ...transaction });
+      });
+    } else {
+      transactions.map((transaction) =>
+        addTransaction({
+          ...transaction,
+          bill_id: bills.sort((a, b) => a.id - b.id)[0].id + 1,
+        })
+      );
+      addBill({
+        user_id: 1,
+        account_id: 1,
+        currency_id: data.currency_id,
+        type: data.type,
+        status: data.status,
+        date: new Date(Date.now()),
+      });
+    }
     reset();
     props.onClose(false);
   };
@@ -100,6 +133,7 @@ export default function BillForm(props: BillFormProps) {
               labelId="currency-label"
               id="currency-select"
               label="Cyrrency"
+              defaultValue={bill.currency_id}
               {...register("currency_id")}
               sx={{ width: "150px" }}
             >
@@ -120,8 +154,12 @@ export default function BillForm(props: BillFormProps) {
               {...register("type")}
               sx={{ width: "150px" }}
             >
-              <MenuItem value={0}>Expense</MenuItem>
-              <MenuItem value={1}>Income</MenuItem>
+              <MenuItem value={0} sx={{ color: "red" }}>
+                Expense
+              </MenuItem>
+              <MenuItem value={1} sx={{ color: "green" }}>
+                Income
+              </MenuItem>
             </Select>
           </FormControl>
           <FormControl>
@@ -134,35 +172,43 @@ export default function BillForm(props: BillFormProps) {
               {...register("status")}
               sx={{ width: "150px" }}
             >
-              <MenuItem value={0}>Failure</MenuItem>
-              <MenuItem value={1}>Success</MenuItem>
+              <MenuItem value={0} sx={{ color: "red" }}>
+                Failure
+              </MenuItem>
+              <MenuItem value={1} sx={{ color: "green" }}>
+                Success
+              </MenuItem>
             </Select>
           </FormControl>
         </div>
         {transactions.map((transaction) => (
           <TransactionForm
-            key={transaction.id}
+            key={transaction.category_id}
             transaction={transaction}
             transactions={transactions}
             setTransactions={setTransactions}
           />
         ))}
+
         <Button
+          disabled={!isNewTransactionEvalable}
           onClick={() => {
             setTransactions([
               ...transactions,
               {
-                id: transactions.length + 1,
                 category_id: 0,
                 value: 0,
-                bill_id: bill.id,
               },
             ]);
           }}
         >
           + Add Transaction
         </Button>
-        <input type="submit" value={"Save the Bill"} />
+        <input
+          type="submit"
+          value={"Save the Bill"}
+          disabled={watch("currency_id") === 0}
+        />
       </form>
     </div>
   );

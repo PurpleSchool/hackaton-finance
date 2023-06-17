@@ -14,6 +14,7 @@ const fakeAccounts: Account[] = [
   },
 ];
 
+
 export const addAccount = createEvent<Account>();
 export const $accountsStore = createStore<Account[]>(fakeAccounts).on(
   addAccount,
