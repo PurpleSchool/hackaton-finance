@@ -1,4 +1,3 @@
-import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 
@@ -6,7 +5,7 @@ config({
   path: '../../envs/.backend.env',
 });
 const configService = new ConfigService();
-export default new DataSource({
+export default {
   type: 'postgres',
   database: configService.get('DB_NAME'),
   host: configService.get('DB_HOST'),
@@ -14,6 +13,7 @@ export default new DataSource({
   password: configService.get('DB_PASSWORD'),
   port: Number(configService.get('DB_PORT')),
   logging: true,
-  entities: ['dist/**/*.entity.js'],
-  migrations: ['dist/migrations/*.js'],
-});
+  entities: ['src/**/*.entity{.ts,.js}'],
+  migrations: ['dist/database/migrations/*.js'],
+  seeds: ['src/database/seeds/**/*{.ts,.js}'],
+};

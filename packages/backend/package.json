@@ -19,11 +19,13 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "ts-node -r tsconfig-paths/register ../../node_modules/typeorm/cli --dataSource=src/configs/typeorm-cli.config.ts",
-    "migration:create": "typeorm migration:create ./src/migrations/${MIGRATION_NAME}",
-    "migration:generate": "npm run build && npm run typeorm migration:generate ./src/migrations/${MIGRATION_NAME}",
-    "migration:run": "npm run build && npm run typeorm --dataSource=src/configs/typeorm-cli.config.ts migration:run",
-    "migration:revert": "npm run build && npm run typeorm --dataSource=src/configs/typeorm-cli.config.ts migration:revert"
+    "typeorm": "ts-node -r tsconfig-paths/register ../../node_modules/typeorm/cli --dataSource=src/configs/typeorm-migrations.config.ts",
+    "migration:create": "typeorm migration:create ./src/database/migrations/${MIGRATION_NAME}",
+    "migration:generate": "npm run build && npm run typeorm migration:generate ./src/database/migrations/${MIGRATION_NAME}",
+    "migration:run": "npm run build && npm run typeorm migration:run",
+    "migration:revert": "npm run build && npm run typeorm migration:revert",
+    "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config -n ./src/configs/typeorm-seeding.config.ts",
+    "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed -n ./src/configs/typeorm-seeding.config.ts"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -34,6 +36,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/typeorm": "^9.0.1",
     "bcryptjs": "^2.4.3",
+    "dotenv": "^16.3.0",
     "nestjs-zod": "^2.3.3",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
@@ -41,6 +44,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
+    "typeorm": "^0.3.16",
+    "typeorm-seeding": "^1.6.1",
     "zod": "^3.21.4"
   },
   "devDependencies": {
