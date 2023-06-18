@@ -8,7 +8,6 @@ import {
 import { useStore } from "effector-react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-
 import {
   $billsStore,
   IBillWithId,
@@ -18,33 +17,25 @@ import {
 } from "../api/fake/billApi";
 import {
   $transactionsStore,
-  ITransactionWithId,
-  ITransaction,
   addTransaction,
   changeTransaction,
 } from "../api/fake/transactionsApi";
+import { TransactionsType } from "../entities/formTypes";
 import TransactionForm from "./TransactionForm";
 import { $currencysStore } from "../api/fake/currencyApi";
+import { isTransactionOld } from "../helpers/typeGuards";
+import { isBillOld } from "../helpers/typeGuards";
 
 type BillFormProps = {
   onClose: Dispatch<SetStateAction<boolean>>;
   bill?: IBillWithId;
 };
-export type TransactionsType = ITransactionWithId | ITransaction;
 
-export function isTransactionOld(
-  transaction: ITransactionWithId | ITransaction
-): transaction is ITransactionWithId {
-  return "id" in transaction;
-}
 export default function BillForm(props: BillFormProps) {
   const currencyList = useStore($currencysStore);
-  const { register, handleSubmit, reset, watch } = useForm<IBillWithId>();
   const bills = useStore($billsStore);
-  
 
-  const [isNewTransactionEvalable, setIsNewTransactionAvalable] =
-    useState<boolean>(true);
+  const { register, handleSubmit, reset, watch } = useForm<IBillWithId>();
 
   const bill: IBillWithId | IBill = props.bill || {
     user_id: 1,
@@ -54,6 +45,7 @@ export default function BillForm(props: BillFormProps) {
     status: 1,
     date: new Date(Date.now()),
   };
+
   const [transactions, setTransactions] = useState<TransactionsType[]>(
     isBillOld(bill)
       ? useStore($transactionsStore).filter(
@@ -66,15 +58,13 @@ export default function BillForm(props: BillFormProps) {
           },
         ]
   );
-
+  const [isNewTransactionEvalable, setIsNewTransactionAvalable] =
+    useState<boolean>(true);
   useEffect(() => {
     transactions.map((transaction) => transaction.category_id).includes(0)
       ? setIsNewTransactionAvalable(false)
       : setIsNewTransactionAvalable(true);
   }, [transactions]);
-  function isBillOld(bill: IBillWithId | IBill): bill is IBillWithId {
-    return "id" in bill;
-  }
 
   const onSubmit: SubmitHandler<IBillWithId> = (data) => {
     if (isBillOld(bill)) {
@@ -132,11 +122,12 @@ export default function BillForm(props: BillFormProps) {
             <Select
               labelId="currency-label"
               id="currency-select"
-              label="Cyrrency"
-              defaultValue={bill.currency_id}
+              label="Currency"
+              defaultValue={bill.currency_id || 0}
               {...register("currency_id")}
               sx={{ width: "150px" }}
             >
+              <MenuItem value={0}>not specified</MenuItem>
               {currencyList.map((currency) => (
                 <MenuItem key={currency.id} value={currency.id}>
                   {currency.sign}
@@ -204,11 +195,7 @@ export default function BillForm(props: BillFormProps) {
         >
           + Add Transaction
         </Button>
-        <input
-          type="submit"
-          value={"Save the Bill"}
-          disabled={watch("currency_id") === 0}
-        />
+        <input type="submit" value={"Save the Bill"} />
       </form>
     </div>
   );

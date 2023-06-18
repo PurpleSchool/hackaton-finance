@@ -3,15 +3,17 @@ import { useState } from "react";
 import BillForm from "./BillForm";
 import { useStore } from "effector-react";
 import { $billsStore } from "../api/fake/billApi";
-import BillCard from "./BillCard";
+
+import BillListItem from "./BillItem";
 
 export default function ListOfBills() {
-  const [formShowed, isFormShowed] = useState<boolean>(true);
+  const [showBillForm, setShowBillForm] = useState<boolean>(true);
   const bills = useStore($billsStore);
 
   return (
     <div
       style={{
+        minHeight: "95vh",
         width: "100%",
         display: "flex",
         flexDirection: "column",
@@ -19,19 +21,19 @@ export default function ListOfBills() {
         justifyContent: "space-between",
       }}
     >
-      {formShowed ? (
-        <BillForm onClose={isFormShowed} />
+      {showBillForm ? (
+        <BillForm onClose={setShowBillForm} />
       ) : (
         <Button
           variant="contained"
           sx={{ width: "180px", alignSelf: "center" }}
-          onClick={() => isFormShowed(true)}
+          onClick={() => setShowBillForm(true)}
         >
           + Add Bill
         </Button>
       )}
       {bills.map((bill) => (
-        <BillCard key={bill.id} {...bill} />
+        <BillListItem key={bill.id} {...bill} />
       ))}
     </div>
   );
