@@ -11,6 +11,7 @@ import { UserEntity } from '../user/user.entity';
 import { AccountEntity } from '../account/account.entity';
 import { CurrencyEntity } from '../currency/currency.entity';
 import { TransactionEntity } from './transaction/transaction.entity';
+import { BillStatusEnum, BillTypeEnum } from './bill.types';
 
 @Entity({
   name: 'bill',
@@ -28,11 +29,17 @@ export class BillEntity {
   @Column()
   currency_id: number;
 
-  @Column()
-  type: number;
+  @Column({
+    type: 'enum',
+    enum: BillTypeEnum,
+  })
+  type: BillTypeEnum;
 
-  @Column()
-  status: number;
+  @Column({
+    type: 'enum',
+    enum: BillStatusEnum,
+  })
+  status: BillStatusEnum;
 
   @Column()
   date: Date;
