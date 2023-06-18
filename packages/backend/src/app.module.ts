@@ -7,6 +7,9 @@ import { BillModule } from './bill/bill.module';
 import { UserModule } from './user/user.module';
 import { AccountModule } from './account/account.module';
 import { CategoryModule } from './category/category.module';
+import { IntegrationModule } from './integration/integration.module';
+import { getIntegrationConfig } from './configs/integration.config';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -23,6 +26,11 @@ import { CategoryModule } from './category/category.module';
     UserModule,
     AccountModule,
     CategoryModule,
+    IntegrationModule.registerAsync({
+      imports: [HttpModule],
+      inject: [ConfigService],
+      useFactory: getIntegrationConfig,
+    }),
   ],
 })
 export class AppModule {}

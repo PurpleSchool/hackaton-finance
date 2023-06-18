@@ -28,6 +28,7 @@
     "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed -n ./src/configs/typeorm-seeding.config.ts"
   },
   "dependencies": {
+    "@nestjs/axios": "^3.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.2",
     "@nestjs/core": "^9.0.0",
@@ -35,6 +36,7 @@
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/typeorm": "^9.0.1",
+    "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.3.0",
     "nestjs-zod": "^2.3.3",
