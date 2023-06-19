@@ -1,4 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { AccountEntity } from './account.entity';
+import { Repository } from 'typeorm/repository/Repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AccountDto } from './dto/account.dto';
+import { ACCOUNT_NOT_FOUND_ERROR } from './account.constants';
 
 @Injectable()
-export class AccountService {}
+export class AccountService {
+  constructor(
+    @InjectRepository(AccountEntity)
+    private billRepository: Repository<AccountEntity>,
+  ) {}
+
+  async createAccount(dto: AccountDto) {
+    this.billRepository.save(dto);
+  }
+
+  async findAccount(id: number) {
+    const account = await this.billRepository.findOneBy({ id });
+    if (!account) {
+      throw new NotFoundException(ACCOUNT_NOT_FOUND_ERROR);
+    }
+
+    return account;
+  }
+
+  async findAccountsByOwner(ownerId: number) {
+    const accountsByOwner = await this.billRepository.find({
+      where: {
+        owner_id: ownerId,
+      },
+    });
+    if (!accountsByOwner.length) {
+      throw new NotFoundException();
+    }
+
+    return accountsByOwner;
+  }
+
+  async deleteAccount(id: number) {
+    const deletedAccount = await this.billRepository.delete(id);
+    if (!deletedAccount.affected) {
+      throw new NotFoundException(ACCOUNT_NOT_FOUND_ERROR);
+    }
+
+    return deletedAccount;
+  }
+}
