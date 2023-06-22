@@ -26,17 +26,21 @@ export default function BillCard(props: BillCardProps) {
 
   const [showActions, setShowActions] = useState<"none" | "flex">("none");
 
-  const category = categoryes.filter(
+  const billsTransactions = transactions.filter(
+    (transaction) => transaction.bill_id === props.bill.id
+  );
+
+  const category = categoryes.find(
     (category) =>
       category.id ===
-      transactions
-        .filter((transaction) => transaction.bill_id === props.bill.id)
-        .sort((a, b) => b.value - a.value)[0].category_id
-  )[0].name;
-
-  const totalValue = transactions
-    .filter((transaction) => transaction.bill_id === props.bill.id)
-    .reduce((sum, transaction) => sum + transaction.value, 0);
+      billsTransactions.reduce((prev, current) =>
+        prev.value > current.value ? prev : current
+      ).category_id
+  )?.name;
+  const totalValue = billsTransactions.reduce(
+    (total, transaction) => total + transaction.value,
+    0
+  );
 
   const currency = currencyes.filter(
     (currency) => currency.id === props.bill.currency_id

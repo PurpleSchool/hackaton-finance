@@ -4,11 +4,18 @@ import BillForm from "./BillForm";
 import { useStore } from "effector-react";
 import { $billsStore } from "../api/fake/billApi";
 
-import BillListItem from "./BillItem";
+import BillListItem from "./BillListItem";
+import { $transactionsStore } from "../api/fake/transactionsApi";
 
-export default function ListOfBills() {
+export default function BillsList() {
   const [showBillForm, setShowBillForm] = useState<boolean>(true);
   const bills = useStore($billsStore);
+
+  const transactions = useStore($transactionsStore);
+  const ShowState = () => {
+    console.log("Bills: ", JSON.stringify(bills));
+    console.log("Transactions: ", JSON.stringify(transactions));
+  };
 
   return (
     <div
@@ -35,6 +42,7 @@ export default function ListOfBills() {
       {bills.map((bill) => (
         <BillListItem key={bill.id} {...bill} />
       ))}
+      <Button onClick={ShowState}>Show state</Button>
     </div>
   );
 }

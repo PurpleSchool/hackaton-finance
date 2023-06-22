@@ -7,10 +7,11 @@ export interface IBill {
   type: 0 | 1;
   status: 0 | 1;
   date: Date;
+  isnew?: number;
 }
 
 export interface IBillWithId extends IBill {
-  id: number;
+  id: number | string;
 }
 
 const fakeBills: IBillWithId[] = [
@@ -25,18 +26,14 @@ const fakeBills: IBillWithId[] = [
   },
 ];
 
-
-export const removeBill = createEvent<number>();
-export const addBill = createEvent<IBill>();
-export const changeBill = createEvent<IBillWithId>();
+export const removeBill = createEvent<number | string>();
+export const addBill = createEvent<IBillWithId>();
+export const updateBill = createEvent<IBillWithId>();
 
 export const $billsStore = createStore<IBillWithId[]>(fakeBills)
   .on(removeBill, (store, id) => [...store.filter((bill) => bill.id !== id)])
-  .on(addBill, (store, bill) =>  [
-    ...store,
-    { id: store.sort((a, b) => a.id - b.id)[0].id + 1, ...bill },
-  ])
-  .on(changeBill, (store, changedBill) => [
-    ...store.filter((bill) => bill.id !== changedBill.id),
-    changedBill,
+  .on(addBill, (store, bill) => [...store, bill])
+  .on(updateBill, (store, updatedBill) => [
+    ...store.filter((bill) => bill.id !== updatedBill.id),
+    updatedBill,
   ]);

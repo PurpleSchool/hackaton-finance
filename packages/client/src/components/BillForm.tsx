@@ -13,18 +13,19 @@ import {
   IBillWithId,
   IBill,
   addBill,
-  changeBill,
+  updateBill,
 } from "../api/fake/billApi";
 import {
   $transactionsStore,
   addTransaction,
-  changeTransaction,
+  updateTransaction,
 } from "../api/fake/transactionsApi";
 import { TransactionsType } from "../entities/formTypes";
 import TransactionForm from "./TransactionForm";
 import { $currencysStore } from "../api/fake/currencyApi";
-import { isTransactionOld } from "../helpers/typeGuards";
-import { isBillOld } from "../helpers/typeGuards";
+import { TransactionWithId } from "../helpers/typeGuards";
+import { BillWithId } from "../helpers/typeGuards";
+import { v4 as uuidv4 } from "uuid";
 
 type BillFormProps = {
   onClose: Dispatch<SetStateAction<boolean>>;
@@ -33,21 +34,30 @@ type BillFormProps = {
 
 export default function BillForm(props: BillFormProps) {
   const currencyList = useStore($currencysStore);
-  const bills = useStore($billsStore);
-
-  const { register, handleSubmit, reset, watch } = useForm<IBillWithId>();
 
   const bill: IBillWithId | IBill = props.bill || {
     user_id: 1,
     account_id: 1,
-    currency_id: 0,
+    currency_id: 1,
     type: 0,
     status: 1,
     date: new Date(Date.now()),
   };
 
+  const { register, handleSubmit, reset } = useForm<IBillWithId>({
+    mode: "onBlur",
+    defaultValues: {
+      user_id: bill.user_id,
+      account_id: bill.account_id,
+      currency_id: bill.currency_id,
+      type: bill.type,
+      status: bill.status,
+      date: bill.date,
+    },
+  });
+
   const [transactions, setTransactions] = useState<TransactionsType[]>(
-    isBillOld(bill)
+    BillWithId(bill)
       ? useStore($transactionsStore).filter(
           (transaction) => transaction.bill_id === bill.id
         )
@@ -67,29 +77,41 @@ export default function BillForm(props: BillFormProps) {
   }, [transactions]);
 
   const onSubmit: SubmitHandler<IBillWithId> = (data) => {
-    if (isBillOld(bill)) {
-      changeBill(data);
+    if (BillWithId(bill)) {
+      updateBill({ ...bill, isnew: 0 });
+
       transactions.map((transaction) => {
-        isTransactionOld(transaction)
-          ? changeTransaction(transaction)
-          : addTransaction({ bill_id: bill.id, ...transaction });
+        TransactionWithId(transaction)
+          ? updateTransaction(transaction)
+          : addTransaction({
+              bill_id: bill.id,
+
+              ...transaction,
+            });
       });
     } else {
+      console.log("without id");
+
+      const newBillId = uuidv4();
+
       transactions.map((transaction) =>
         addTransaction({
           ...transaction,
-          bill_id: bills.sort((a, b) => a.id - b.id)[0].id + 1,
+          bill_id: newBillId,
         })
       );
       addBill({
+        id: newBillId,
         user_id: 1,
         account_id: 1,
         currency_id: data.currency_id,
         type: data.type,
         status: data.status,
         date: new Date(Date.now()),
+        isnew: 1,
       });
     }
+
     reset();
     props.onClose(false);
   };
@@ -123,11 +145,10 @@ export default function BillForm(props: BillFormProps) {
               labelId="currency-label"
               id="currency-select"
               label="Currency"
-              defaultValue={bill.currency_id || 0}
+              defaultValue={bill.currency_id}
               {...register("currency_id")}
               sx={{ width: "150px" }}
             >
-              <MenuItem value={0}>not specified</MenuItem>
               {currencyList.map((currency) => (
                 <MenuItem key={currency.id} value={currency.id}>
                   {currency.sign}
@@ -172,9 +193,9 @@ export default function BillForm(props: BillFormProps) {
             </Select>
           </FormControl>
         </div>
-        {transactions.map((transaction) => (
+        {transactions.map((transaction, index) => (
           <TransactionForm
-            key={transaction.category_id}
+            key={index}
             transaction={transaction}
             transactions={transactions}
             setTransactions={setTransactions}

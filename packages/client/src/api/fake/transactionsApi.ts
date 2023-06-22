@@ -1,20 +1,19 @@
 import { createEvent, createStore } from "effector";
+import { v4 as uuidv4 } from "uuid";
 
 export interface ITransaction {
   category_id: number;
   value: number;
-  
 }
 
 export interface ITransactionWithId extends ITransaction {
-  id: number;
-  bill_id: number;
+  id: number | string;
+  bill_id: number | string;
 }
 
 interface ICreateTransaction extends ITransaction {
-  bill_id: number;
+  bill_id: number | string;
 }
-
 
 const fakeTransactions: ITransactionWithId[] = [
   {
@@ -32,17 +31,19 @@ const fakeTransactions: ITransactionWithId[] = [
 ];
 
 export const addTransaction = createEvent<ICreateTransaction>();
-export const changeTransaction = createEvent<ITransactionWithId>();
+export const updateTransaction = createEvent<ITransactionWithId>();
 export const removeTransaction = createEvent<number>();
 
-export const $transactionsStore = createStore<ITransactionWithId[]>(fakeTransactions)
-  .on(addTransaction, (store, payload) => [
+export const $transactionsStore = createStore<ITransactionWithId[]>(
+  fakeTransactions
+)
+  .on(addTransaction, (store, newTransaction) => [
     ...store,
-    { id: store.sort((a, b) => a.id - b.id)[0].id + 1, ...payload },
+    { ...newTransaction, id: uuidv4() },
   ])
-  .on(changeTransaction, (store, changedTransaction) => [
-    ...store.filter((transaction) => transaction.id !== changedTransaction.id),
-    changedTransaction,
+  .on(updateTransaction, (store, updatedTransaction) => [
+    ...store.filter((transaction) => transaction.id !== updatedTransaction.id),
+    updatedTransaction,
   ])
   .on(removeTransaction, (store, id) => [
     ...store.filter((transaction) => transaction.id !== id),

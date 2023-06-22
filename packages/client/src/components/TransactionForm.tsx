@@ -7,9 +7,9 @@ import {
 } from "@mui/material";
 import { Dispatch, SetStateAction, SyntheticEvent, useState } from "react";
 import { ITransactionWithId, ITransaction } from "../api/fake/transactionsApi";
-import { $categorysStore, addCategory } from "../api/fake/categoryApi";
+import { $categorysStore } from "../api/fake/categoryApi";
 import { useStore } from "effector-react";
-import { isTransactionOld } from "../helpers/typeGuards";
+import { TransactionWithId } from "../helpers/typeGuards";
 import { TransactionsType } from "../entities/formTypes";
 import CreateCategoty from "./CreateCategoty";
 
@@ -31,7 +31,7 @@ export default function TransactionForm(props: TransactionFormProps) {
     details?: AutocompleteChangeDetails<string> | undefined
   ): void => {
     const newTransactions = props.transactions.map((transaction) =>
-      isTransactionOld(transaction)
+      TransactionWithId(transaction)
         ? transaction.category_id === props.transaction.category_id
           ? {
               id: transaction.id,
@@ -57,7 +57,7 @@ export default function TransactionForm(props: TransactionFormProps) {
 
   const handleChangeValue = (event: { target: { value: string } }): void => {
     const newTransactions = props.transactions.map((transaction) =>
-      isTransactionOld(transaction)
+      TransactionWithId(transaction)
         ? transaction.category_id === props.transaction.category_id
           ? {
               id: transaction.id,
@@ -99,7 +99,7 @@ export default function TransactionForm(props: TransactionFormProps) {
         onClick={() => setIsNewCategoryRequired(false)}
         options={categories.map((category) => category.name)}
         defaultValue={
-          isTransactionOld(props.transaction)
+          TransactionWithId(props.transaction)
             ? categories.filter(
                 (category) => category.id === props.transaction.category_id
               )[0].name
@@ -136,7 +136,7 @@ export default function TransactionForm(props: TransactionFormProps) {
         label="Value"
         onChange={handleChangeValue}
         defaultValue={
-          isTransactionOld(props.transaction) ? props.transaction.value : null
+          TransactionWithId(props.transaction) ? props.transaction.value : null
         }
         sx={{ width: "100%" }}
       />
