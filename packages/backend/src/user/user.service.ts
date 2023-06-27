@@ -50,11 +50,11 @@ export class UserService {
       throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
     }
 
-    return { name: user.name };
+    return user;
   }
 
-  async login(name: string) {
-    const payload = { name };
+  async login(name: string, userId: number) {
+    const payload = { name, userId };
 
     return {
       accessToken: await this.jwtService.signAsync(payload),

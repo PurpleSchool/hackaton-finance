@@ -1,9 +1,11 @@
 import { z } from 'zod';
-import { BillStatusEnum, BillTypeEnum } from '../bill.types';
 import { createZodDto } from 'nestjs-zod';
+import {
+  BillTypeEnum,
+  BillStatusEnum,
+} from '../../contracts/commands/bill/bill.types';
 
 export const BillSchema = z.object({
-  user_id: z.number(),
   account_id: z.number(),
   currency_id: z.number(),
   type: z.nativeEnum(BillTypeEnum),

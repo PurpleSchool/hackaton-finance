@@ -12,8 +12,12 @@ export class AccountService {
     private billRepository: Repository<AccountEntity>,
   ) {}
 
-  async createAccount(dto: AccountDto) {
-    this.billRepository.save(dto);
+  async createAccount(dto: AccountDto, userId: number) {
+    const account = this.billRepository.create({
+      name: dto.name,
+      owner_id: userId,
+    });
+    return this.billRepository.save(account);
   }
 
   async findAccount(id: number) {
@@ -25,10 +29,10 @@ export class AccountService {
     return account;
   }
 
-  async findAccountsByOwner(ownerId: number) {
+  async findAccountsByOwner(userId: number) {
     const accountsByOwner = await this.billRepository.find({
       where: {
-        owner_id: ownerId,
+        owner_id: userId,
       },
     });
     if (!accountsByOwner.length) {

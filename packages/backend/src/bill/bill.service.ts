@@ -48,8 +48,16 @@ export class BillService {
     return billsByAccount;
   }
 
-  async createBill(dto: BillDto) {
-    return this.billRepository.save(dto);
+  async createBill(dto: BillDto, userId: number) {
+    const bill = this.billRepository.create({
+      user_id: userId,
+      account_id: dto.account_id,
+      currency_id: dto.currency_id,
+      type: dto.type,
+      status: dto.status,
+      date: dto.date,
+    });
+    return this.billRepository.save(bill);
   }
 
   async deleteBill(id: number) {
