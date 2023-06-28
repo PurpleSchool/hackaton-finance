@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { AccountEntity } from './account.entity';
 import { Repository } from 'typeorm/repository/Repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AccountDto } from './dto/account.dto';
 import { ACCOUNT_NOT_FOUND_ERROR } from './account.constants';
+import { CreateAccountDto } from 'src/contracts/commands/account/create-account';
 
 @Injectable()
 export class AccountService {
@@ -12,7 +12,7 @@ export class AccountService {
     private billRepository: Repository<AccountEntity>,
   ) {}
 
-  async createAccount(dto: AccountDto, userId: number) {
+  async createAccount(dto: CreateAccountDto, userId: number) {
     const account = this.billRepository.create({
       name: dto.name,
       owner_id: userId,

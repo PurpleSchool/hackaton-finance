@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BillEntity } from './bill.entity';
-import { BillDto } from './dto/bill.dto';
 import { NotFoundException } from '@nestjs/common';
 import { BILL_NOT_FOUND_ERROR } from './bill.constants';
+import { CreateBillDto } from 'src/contracts/commands/bill/create-bill';
 
 @Injectable()
 export class BillService {
@@ -48,7 +48,7 @@ export class BillService {
     return billsByAccount;
   }
 
-  async createBill(dto: BillDto, userId: number) {
+  async createBill(dto: CreateBillDto, userId: number) {
     const bill = this.billRepository.create({
       user_id: userId,
       account_id: dto.account_id,
@@ -69,8 +69,15 @@ export class BillService {
     return deletedBill;
   }
 
-  async updateBill(id: number, dto: BillDto) {
-    const updatedBill = await this.billRepository.update(id, dto);
+  async updateBill(
+    id: number,
+    userId: number,
+    dto: Omit<CreateBillDto, 'transactions'>,
+  ) {
+    const updatedBill = await this.billRepository.update(id, {
+      user_id: userId,
+      ...dto,
+    });
     if (!updatedBill.affected) {
       throw new NotFoundException(BILL_NOT_FOUND_ERROR);
     }

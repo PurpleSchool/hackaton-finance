@@ -8,10 +8,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AccountService } from './account.service';
-import { AccountDto } from './dto/account.dto';
 import { JwtAuthGuard } from 'src/user/guards/jwt.guard';
 import { IUserInfo } from 'src/user/user.interface';
 import { User } from 'src/decorators/user.decorator';
+import { CreateAccountDto } from 'src/contracts/commands/account/create-account';
 
 @Controller('account')
 export class AccountController {
@@ -19,7 +19,7 @@ export class AccountController {
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
-  async create(@Body() dto: AccountDto, @User() user: IUserInfo) {
+  async create(@Body() dto: CreateAccountDto, @User() user: IUserInfo) {
     return this.accountService.createAccount(dto, user.userId);
   }
 

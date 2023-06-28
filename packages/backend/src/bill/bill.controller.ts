@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -8,20 +9,33 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { BillDto } from './dto/bill.dto';
 import { BillService } from './bill.service';
 import { JwtAuthGuard } from 'src/user/guards/jwt.guard';
 import { User } from 'src/decorators/user.decorator';
 import { IUserInfo } from 'src/user/user.interface';
+import { CreateBillDto } from 'src/contracts/commands/bill/create-bill';
+import { TransactionService } from './transaction/transaction.service';
 
 @Controller('bill')
 export class BillController {
-  constructor(private billService: BillService) {}
+  constructor(
+    private billService: BillService,
+    private transactionService: TransactionService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
-  async create(@Body() dto: BillDto, @User() user: IUserInfo) {
-    return this.billService.createBill(dto, user.userId);
+  async create(@Body() dto: CreateBillDto, @User() user: IUserInfo) {
+    const bill = await this.billService.createBill(dto, user.userId);
+    const transaction = await this.transactionService.createTransactions(
+      dto.transactions,
+      bill.id,
+    );
+    if (!transaction) {
+      throw new BadRequestException();
+    }
+
+    return bill;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -32,8 +46,12 @@ export class BillController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() dto: BillDto) {
-    return this.billService.updateBill(id, dto);
+  async update(
+    @Param('id') id: number,
+    @Body() dto: Omit<CreateBillDto, 'transactions'>,
+    @User() user: IUserInfo,
+  ) {
+    return this.billService.updateBill(id, user.userId, dto);
   }
 
   @UseGuards(JwtAuthGuard)
