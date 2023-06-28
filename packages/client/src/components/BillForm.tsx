@@ -92,7 +92,7 @@ export default function BillForm(props: BillFormProps) {
     } else {
       console.log("without id");
 
-      const newBillId = uuidv4();
+      const newBillId = parseInt(uuidv4());
 
       transactions.map((transaction) =>
         addTransaction({

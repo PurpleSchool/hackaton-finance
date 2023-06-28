@@ -42,11 +42,11 @@ export default function BillCard(props: BillCardProps) {
     0
   );
 
-  const currency = currencyes.filter(
+  const currency = currencyes.find(
     (currency) => currency.id === props.bill.currency_id
-  )[0].sign;
+  )?.sign;
 
-  const handleDeleteBill = () => {
+  const handleDeleteBill = (): void => {
     removeBill(props.bill.id);
   };
 

@@ -7,25 +7,25 @@ export interface ITransaction {
 }
 
 export interface ITransactionWithId extends ITransaction {
-  id: number | string;
-  bill_id: number | string;
+  id: number;
+  bill_id: number;
 }
 
 interface ICreateTransaction extends ITransaction {
-  bill_id: number | string;
+  bill_id: number;
 }
 
 const fakeTransactions: ITransactionWithId[] = [
   {
     id: 1,
     category_id: 1,
-    value: 200,
+    value: 20,
     bill_id: 1,
   },
   {
     id: 2,
     category_id: 2,
-    value: 100,
+    value: 10,
     bill_id: 1,
   },
 ];
@@ -39,7 +39,7 @@ export const $transactionsStore = createStore<ITransactionWithId[]>(
 )
   .on(addTransaction, (store, newTransaction) => [
     ...store,
-    { ...newTransaction, id: uuidv4() },
+    { ...newTransaction, id: parseInt(uuidv4()) },
   ])
   .on(updateTransaction, (store, updatedTransaction) => [
     ...store.filter((transaction) => transaction.id !== updatedTransaction.id),

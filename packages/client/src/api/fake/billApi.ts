@@ -11,7 +11,7 @@ export interface IBill {
 }
 
 export interface IBillWithId extends IBill {
-  id: number | string;
+  id: number;
 }
 
 const fakeBills: IBillWithId[] = [

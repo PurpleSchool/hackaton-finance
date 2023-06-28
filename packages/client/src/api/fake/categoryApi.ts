@@ -1,4 +1,5 @@
 import { createEvent, createStore } from "effector";
+import { v4 as uuidv4 } from "uuid";
 
 export interface ICategory {
   name: string;
@@ -16,8 +17,5 @@ const fakeCategorys: ICategoryWithId[] = [
 export const addCategory = createEvent<ICategory>();
 export const $categorysStore = createStore<ICategoryWithId[]>(fakeCategorys).on(
   addCategory,
-  (store, payload) => [
-    ...store,
-    { id: store.sort((a, b) => a.id - b.id)[0].id + 1, ...payload },
-  ]
+  (store, payload) => [...store, { id: parseInt(uuidv4()), ...payload }]
 );

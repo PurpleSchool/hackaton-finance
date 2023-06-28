@@ -1,6 +1,6 @@
 :root {
   --sidebar-background: #fffbf3;
-  --blue: #4807ea;
+  --blue: #2196f3;
   --red: #eb001b;
   --green: #22d03e;
   --gray: #cecece;
@@ -17,6 +17,20 @@
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-width: 100vw;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+}
+#root {
+  height: 100%;
 }
 
 /* Links */
@@ -109,19 +123,32 @@ button::-moz-focus-inner {
   border: 0;
 }
 
-label {
-  cursor: pointer;
-}
-
-legend {
-  display: block;
-}
-
 body {
-  background-color: #f6f6f6;
+  min-height: 100vh;
+  width: 100vw;
+  font-family: "Roboto", sans-serif;
+  background-image: url(./assets/layered-waves.svg);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+[class*="_container"] {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  font-family: "Roboto", sans-serif;
+  justify-content: center;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 25px 40px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
 }
