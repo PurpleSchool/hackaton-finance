@@ -1,18 +1,10 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AccountService } from './account.service';
 import {
   AccountResponseDto,
   CreateAccountDto,
 } from '../../../../contracts/commands/account/create-account';
-import { User } from '../decorators/user.decorator';
+import { User } from '../common/decorators/user.decorator';
 import { JwtAuthGuard } from '../user/guards/jwt.guard';
 import { IUserInfo } from '../user/user.interface';
 import { GetAccountsByResponseDto } from '../../../../contracts';
@@ -32,9 +24,7 @@ export class AccountController {
 
   @UseGuards(JwtAuthGuard)
   @Get('by-owner')
-  async findByOwner(
-    @User() user: IUserInfo,
-  ): Promise<GetAccountsByResponseDto> {
+  async findByOwner(@User() user: IUserInfo): Promise<GetAccountsByResponseDto> {
     return this.accountService.findAccountsByOwner(user.userId);
   }
 

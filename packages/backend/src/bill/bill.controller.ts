@@ -16,28 +16,19 @@ import {
   CreateBillDto,
   GetBillsByResponseDto,
 } from '../../../../contracts/commands/bill/create-bill';
-import { User } from '../decorators/user.decorator';
+import { User } from '../common/decorators/user.decorator';
 import { JwtAuthGuard } from '../user/guards/jwt.guard';
 import { IUserInfo } from '../user/user.interface';
 
 @Controller('bill')
 export class BillController {
-  constructor(
-    private billService: BillService,
-    private transactionService: TransactionService,
-  ) {}
+  constructor(private billService: BillService, private transactionService: TransactionService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
-  async create(
-    @Body() dto: CreateBillDto,
-    @User() user: IUserInfo,
-  ): Promise<BillResponseDto> {
+  async create(@Body() dto: CreateBillDto, @User() user: IUserInfo): Promise<BillResponseDto> {
     const bill = await this.billService.createBill(dto, user.userId);
-    const transaction = await this.transactionService.createTransactions(
-      dto.transactions,
-      bill.id,
-    );
+    const transaction = await this.transactionService.createTransactions(dto.transactions, bill.id);
     if (!transaction.length) {
       throw new BadRequestException();
     }
@@ -69,9 +60,7 @@ export class BillController {
 
   @UseGuards(JwtAuthGuard)
   @Get('by-account/:accountId')
-  async findByAccount(
-    @Param('accountId') accountId: number,
-  ): Promise<GetBillsByResponseDto> {
+  async findByAccount(@Param('accountId') accountId: number): Promise<GetBillsByResponseDto> {
     return this.billService.findBillsByAccountId(accountId);
   }
 

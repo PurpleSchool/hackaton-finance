@@ -12,18 +12,20 @@ import {
 
 @Injectable()
 export class MarketService {
+  URL = 'https://api.apilayer.com/fixer';
+
   constructor(
     @Inject(INTEGRATION_MODULE_OPTIONS)
     private readonly options: IntegrationsOptions,
     private readonly httpService: HttpService,
   ) {}
 
-  public async getExchangeRateByDate({ base, symbols, date }: ExchangeRateDto) {
+  public async getExchangeRateByDate({ toCurrency, fromCurrencies, date }: ExchangeRateDto) {
+    const symbols = fromCurrencies.join(',');
     const { data } = await firstValueFrom(
       this.httpService
         .get<ExchangeRateResponseDto | ExchangeRateBadResponseDto>(
-          // eslint-disable-next-line prettier/prettier
-          `https://api.apilayer.com/fixer/${date}?base=${base}&symbols=${symbols.join(',')}`,
+          `${URL}/${date}?base=${toCurrency}&symbols=${symbols}`,
           {
             headers: { apiKey: this.options.apiKey },
           },
@@ -37,12 +39,12 @@ export class MarketService {
     return data;
   }
 
-  public async getExchangeRateLatest({ base, symbols }: ExchangeRateDto) {
+  public async getExchangeRateLatest({ toCurrency, fromCurrencies }: ExchangeRateDto) {
+    const symbols = fromCurrencies.join(',');
     const { data } = await firstValueFrom(
       this.httpService
         .get<ExchangeRateResponseDto | ExchangeRateBadResponseDto>(
-          // eslint-disable-next-line prettier/prettier
-          `https://api.apilayer.com/fixer/latest?base=${base}&symbols=${symbols.join(',')}`,
+          `${URL}/latest?base=${toCurrency}&symbols=${symbols}`,
           {
             headers: { apiKey: this.options.apiKey },
           },

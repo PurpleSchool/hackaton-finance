@@ -6,9 +6,9 @@ import { UserModule } from './user/user.module';
 import { AccountModule } from './account/account.module';
 import { CategoryModule } from './category/category.module';
 import { IntegrationModule } from './integration/integration.module';
-import { getIntegrationConfig } from './configs/integration.config';
+import { getIntegrationConfig } from './common/configs/integration.config';
 import { HttpModule } from '@nestjs/axios';
-import { DatabaseModule } from './database/database.module';
+import { DatabaseModule } from './common/database/database.module';
 
 @Module({
   imports: [

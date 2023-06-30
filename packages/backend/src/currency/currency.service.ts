@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { MarketService } from '../integration/market/market.service';
 import { ExchangeRateDto } from '../../../../contracts/';
-import { PrismaService } from '../database/prisma.service';
+import { PrismaService } from '../common/database/prisma.service';
 
 @Injectable()
 export class CurrencyService {

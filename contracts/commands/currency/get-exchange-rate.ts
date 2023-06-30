@@ -2,8 +2,8 @@ import { z } from 'zod';
 import { createZodDto } from 'nestjs-zod';
 
 export const GetExchangeRateRequestSchema = z.object({
-  base: z.string(),
-  symbols: z.array(z.string()),
+  toCurrency: z.string(),
+  fromCurrencies: z.array(z.string()),
   date: z.string().optional(),
 });
 

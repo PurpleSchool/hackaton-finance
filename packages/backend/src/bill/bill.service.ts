@@ -1,12 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 import { BILL_NOT_FOUND_ERROR } from './bill.constants';
-import {
-  BillStatusEnum,
-  BillTypeEnum,
-  CreateBillDto,
-} from '../../../../contracts/';
-import { PrismaService } from '../database/prisma.service';
+import { BillStatusEnum, BillTypeEnum, CreateBillDto } from '../../../../contracts/';
+import { PrismaService } from '../common/database/prisma.service';
 import { Bill } from '@prisma/client';
 
 @Injectable()
@@ -65,11 +61,7 @@ export class BillService {
     return this.mapToModel(deletedBill);
   }
 
-  async updateBill(
-    id: number,
-    userId: number,
-    dto: Omit<CreateBillDto, 'transactions'>,
-  ) {
+  async updateBill(id: number, userId: number, dto: Omit<CreateBillDto, 'transactions'>) {
     const updatedBill = await this.prisma.bill.update({
       where: { id },
       data: {

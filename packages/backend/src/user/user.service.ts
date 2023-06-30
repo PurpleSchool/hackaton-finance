@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, genSalt, hash } from 'bcryptjs';
 import {
@@ -10,7 +6,7 @@ import {
   USER_NOT_FOUND_ERROR,
   WRONG_PASSWORD_ERROR,
 } from './user.constants';
-import { PrismaService } from '../database/prisma.service';
+import { PrismaService } from '../common/database/prisma.service';
 
 @Injectable()
 export class UserService {

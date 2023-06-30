@@ -1,5 +1,5 @@
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'zod';
+import { createZodDto } from "nestjs-zod";
+import { z } from "zod";
 
 const CreateAccountRequestSchema = z.object({
   name: z.string().min(1).max(256),
@@ -12,9 +12,7 @@ const AccountResponseSchema = z.object({
 });
 
 export class CreateAccountDto extends createZodDto(
-  CreateAccountRequestSchema,
+  CreateAccountRequestSchema
 ) {}
 
-export class AccountResponseDto extends createZodDto(
-  AccountResponseSchema,
-) {}
+export class AccountResponseDto extends createZodDto(AccountResponseSchema) {}
