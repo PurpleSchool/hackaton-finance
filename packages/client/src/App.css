@@ -1,0 +1,9 @@
+.app {
+  width: 100vw;
+  max-width: 600px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
