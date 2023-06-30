@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserEntity } from './user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { compare, genSalt, hash } from 'bcryptjs';
 import {
@@ -13,17 +12,14 @@ import {
   USER_NOT_FOUND_ERROR,
   WRONG_PASSWORD_ERROR,
 } from './user.constants';
+import { PrismaService } from '../database/prisma.service';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(UserEntity)
-    private usersRepository: Repository<UserEntity>,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private jwtService: JwtService, private prisma: PrismaService) {}
 
   async findUser(name: string) {
-    return this.usersRepository.findOne({ where: { name } });
+    return this.prisma.user.findUnique({ where: { name } });
   }
 
   async createUser(name: string, password: string) {
@@ -33,9 +29,8 @@ export class UserService {
     }
 
     const salt = await genSalt(10);
-    return this.usersRepository.save({
-      name: name,
-      password: await hash(password, salt),
+    return this.prisma.user.create({
+      data: { name: name, password: await hash(password, salt) },
     });
   }
 
@@ -50,11 +45,11 @@ export class UserService {
       throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
     }
 
-    return { name: user.name };
+    return user;
   }
 
-  async login(name: string) {
-    const payload = { name };
+  async login(name: string, userId: number) {
+    const payload = { name, userId };
 
     return {
       accessToken: await this.jwtService.signAsync(payload),

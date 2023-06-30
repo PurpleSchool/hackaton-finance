@@ -1,20 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CurrencyEntity } from './currency.entity';
 import { MarketService } from '../integration/market/market.service';
-import { ExchangeRateDto } from './dto/exchange-rate.dto';
+import { ExchangeRateDto } from '../../../../contracts/';
+import { PrismaService } from '../database/prisma.service';
 
 @Injectable()
 export class CurrencyService {
   constructor(
-    @InjectRepository(CurrencyEntity)
-    private readonly currencyRepository: Repository<CurrencyEntity>,
     private readonly marketService: MarketService,
+    private readonly prisma: PrismaService,
   ) {}
 
   public async getAll() {
-    return this.currencyRepository.find();
+    return this.prisma.currency.findMany();
   }
 
   public async getExchangeRate(dto: ExchangeRateDto) {
