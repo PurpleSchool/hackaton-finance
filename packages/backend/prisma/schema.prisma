@@ -45,30 +45,26 @@ model Bill {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  name     String   @unique
+  id       Int    @id @default(autoincrement())
+  name     String @unique
   password String
 
   accounts Account[]
   bills    Bill[]
-  Currency Currency[]
 }
 
 model Account {
-  id       Int      @id @default(autoincrement())
-  name     String
-  ownerId  Int
-  bills    Bill[]
+  id      Int    @id @default(autoincrement())
+  name    String
+  ownerId Int
+  bills   Bill[]
 
   user User @relation(fields: [ownerId], references: [id])
 }
 
 model Currency {
-  id     Int    @id @default(autoincrement())
-  name   String
-  code   String
-  userId Int
-  bills  Bill[]
-
-  user User @relation(fields: [userId], references: [id])
+  id    Int    @id @default(autoincrement())
+  name  String
+  code  String
+  bills Bill[]
 }

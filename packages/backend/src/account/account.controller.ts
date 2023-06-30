@@ -16,7 +16,6 @@ import { User } from '../decorators/user.decorator';
 import { JwtAuthGuard } from '../user/guards/jwt.guard';
 import { IUserInfo } from '../user/user.interface';
 import { GetAccountsByResponseDto } from '../../../../contracts';
-import { DeleteResult } from 'typeorm';
 
 @Controller('account')
 export class AccountController {

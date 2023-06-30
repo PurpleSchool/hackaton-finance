@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { MarketService } from '../integration/market/market.service';
 import { ExchangeRateDto } from '../../../../contracts/';
 import { PrismaService } from '../database/prisma.service';

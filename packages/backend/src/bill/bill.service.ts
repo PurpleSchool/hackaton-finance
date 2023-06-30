@@ -22,14 +22,6 @@ export class BillService {
     return this.mapToModel(bill);
   }
 
-  private mapToModel(bill: Bill) {
-    return {
-      ...bill,
-      type: bill.type as BillTypeEnum,
-      status: bill.status as BillStatusEnum,
-    };
-  }
-
   async findBillsByUserId(userId: number) {
     const bill = await this.prisma.bill.findMany({ where: { userId } });
     if (!bill.length) {
@@ -94,5 +86,13 @@ export class BillService {
     }
 
     return this.mapToModel(updatedBill);
+  }
+
+  private mapToModel(bill: Bill) {
+    return {
+      ...bill,
+      type: bill.type as BillTypeEnum,
+      status: bill.status as BillStatusEnum,
+    };
   }
 }

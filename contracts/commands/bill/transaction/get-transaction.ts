@@ -3,20 +3,20 @@ import { createZodDto } from 'nestjs-zod';
 import { BillTypeEnum } from '../bill.types';
 
 const GetTransactionsRequestSchema = z.object({
-  account_id: z.number(),
+  accountId: z.number(),
   limit: z.number().max(20),
   offset: z.number().max(20),
 });
 
 const GetTransactionsResponseSchema = z.array(
   z.object({
-    transaction_id: z.number(),
-    account_id: z.number(),
-    currency_id: z.number(),
+    transactionId: z.number(),
+    accountId: z.number(),
+    currencyId: z.number(),
     type: z.nativeEnum(BillTypeEnum),
     date: z.coerce.date(),
     sum: z.number().nullable(),
-    category_id: z.number(),
+    categoryId: z.number(),
   }),
 );
 

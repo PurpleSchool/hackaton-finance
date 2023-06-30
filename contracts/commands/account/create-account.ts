@@ -7,7 +7,7 @@ const CreateAccountRequestSchema = z.object({
 
 const AccountResponseSchema = z.object({
   name: z.string().min(1).max(256),
-  owner_id: z.number(),
+  ownerId: z.number(),
   id: z.number(),
 });
 

@@ -1,6 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm/repository/Repository';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ACCOUNT_NOT_FOUND_ERROR } from './account.constants';
 import { CreateAccountDto } from '../../../../contracts';
 import { PrismaService } from '../database/prisma.service';

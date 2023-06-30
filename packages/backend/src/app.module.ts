@@ -1,4 +1,3 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { CurrencyModule } from './currency/currency.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';

@@ -20,6 +20,7 @@ export class UserController {
   @Post('login')
   async login(@Body() dto: UserDto): Promise<UserLoginResponseDto> {
     const user = await this.userService.validateUser(dto.name, dto.password);
+
     return this.userService.login(user.name, user.id);
   }
 }
