@@ -1,7 +1,12 @@
 import { Body, Controller, Get, UseGuards } from '@nestjs/common';
 import { CurrencyService } from './currency.service';
 import { JwtAuthGuard } from 'src/user/guards/jwt.guard';
-import { ExchangeRateDto } from 'src/contracts/commands/currency/get-exchange-rate';
+import {
+  ExchangeRateBadResponseDto,
+  ExchangeRateDto,
+  ExchangeRateResponseDto,
+  GetAllCurrencyResponseDto,
+} from '../../../../contracts/';
 
 @Controller('currency')
 export class CurrencyController {
@@ -9,13 +14,15 @@ export class CurrencyController {
 
   @UseGuards(JwtAuthGuard)
   @Get('exchange-rate')
-  public async getExchangeRate(@Body() dto: ExchangeRateDto) {
+  public async getExchangeRate(
+    @Body() dto: ExchangeRateDto,
+  ): Promise<ExchangeRateResponseDto | ExchangeRateBadResponseDto> {
     return this.currencyService.getExchangeRate(dto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  public async getAll() {
+  public async getAll(): Promise<GetAllCurrencyResponseDto> {
     return this.currencyService.getAll();
   }
 }

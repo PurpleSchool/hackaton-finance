@@ -1,11 +1,11 @@
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
-export const CreateAccountRequestSchema = z.object({
+const CreateAccountRequestSchema = z.object({
   name: z.string().min(1).max(256),
 });
 
-export const CreateAccountResponseSchema = z.object({
+const AccountResponseSchema = z.object({
   name: z.string().min(1).max(256),
   owner_id: z.number(),
   id: z.number(),
@@ -13,4 +13,8 @@ export const CreateAccountResponseSchema = z.object({
 
 export class CreateAccountDto extends createZodDto(
   CreateAccountRequestSchema,
+) {}
+
+export class AccountResponseDto extends createZodDto(
+  AccountResponseSchema,
 ) {}

@@ -4,7 +4,7 @@ import {
   UserDto,
   UserLoginResponseDto,
   UserRegisterResponseDto,
-} from 'src/contracts/commands/user/auth-user';
+} from '../../../../contracts/';
 
 @Controller('user')
 export class UserController {

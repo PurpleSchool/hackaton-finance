@@ -3,7 +3,7 @@ import { AccountEntity } from './account.entity';
 import { Repository } from 'typeorm/repository/Repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ACCOUNT_NOT_FOUND_ERROR } from './account.constants';
-import { CreateAccountDto } from 'src/contracts/commands/account/create-account';
+import { CreateAccountDto } from '../../../../contracts';
 
 @Injectable()
 export class AccountService {

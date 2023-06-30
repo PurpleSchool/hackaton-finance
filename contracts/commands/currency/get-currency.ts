@@ -1,9 +1,15 @@
 import { z } from 'zod';
+import { createZodDto } from 'nestjs-zod';
 
-export const GetAllCurrencyResponseSchema = z.array(
+
+const GetAllCurrencyResponseSchema = z.array(
   z.object({
     id: z.number(),
     name: z.string(),
     code: z.string(),
   }),
 );
+
+export class GetAllCurrencyResponseDto extends createZodDto(
+  GetAllCurrencyResponseSchema,
+) {}

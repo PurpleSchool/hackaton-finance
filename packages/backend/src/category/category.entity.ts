@@ -6,7 +6,7 @@ import {
   Unique,
 } from 'typeorm';
 import { TransactionEntity } from '../bill/transaction/transaction.entity';
-import { CategoryTypeEnum } from './category.types';
+import { CategoryTypeEnum } from '../../../../contracts';
 
 @Entity({
   name: 'category',

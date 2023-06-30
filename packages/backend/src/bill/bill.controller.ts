@@ -10,11 +10,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { BillService } from './bill.service';
-import { JwtAuthGuard } from 'src/user/guards/jwt.guard';
-import { User } from 'src/decorators/user.decorator';
-import { IUserInfo } from 'src/user/user.interface';
-import { CreateBillDto } from 'src/contracts/commands/bill/create-bill';
 import { TransactionService } from './transaction/transaction.service';
+import {
+  BillResponseDto,
+  CreateBillDto,
+  GetBillsByResponseDto,
+} from '../../../../contracts/commands/bill/create-bill';
+import { User } from '../decorators/user.decorator';
+import { JwtAuthGuard } from '../user/guards/jwt.guard';
+import { IUserInfo } from '../user/user.interface';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
 @Controller('bill')
 export class BillController {
@@ -25,7 +30,10 @@ export class BillController {
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
-  async create(@Body() dto: CreateBillDto, @User() user: IUserInfo) {
+  async create(
+    @Body() dto: CreateBillDto,
+    @User() user: IUserInfo,
+  ): Promise<BillResponseDto> {
     const bill = await this.billService.createBill(dto, user.userId);
     const transaction = await this.transactionService.createTransactions(
       dto.transactions,
@@ -40,7 +48,7 @@ export class BillController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id: number) {
+  async delete(@Param('id') id: number): Promise<DeleteResult> {
     return this.billService.deleteBill(id);
   }
 
@@ -50,25 +58,27 @@ export class BillController {
     @Param('id') id: number,
     @Body() dto: Omit<CreateBillDto, 'transactions'>,
     @User() user: IUserInfo,
-  ) {
+  ): Promise<UpdateResult> {
     return this.billService.updateBill(id, user.userId, dto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('by-user')
-  async findByUser(@User() user: IUserInfo) {
+  async findByUser(@User() user: IUserInfo): Promise<GetBillsByResponseDto> {
     return this.billService.findBillsByUserId(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('by-account/:accountId')
-  async findByAccount(@Param('accountId') accountId: number) {
+  async findByAccount(
+    @Param('accountId') accountId: number,
+  ): Promise<GetBillsByResponseDto> {
     return this.billService.findBillsByAccountId(accountId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async find(@Param('id') id: number) {
+  async find(@Param('id') id: number): Promise<BillResponseDto> {
     return this.billService.findBill(id);
   }
 }

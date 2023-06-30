@@ -11,20 +11,19 @@ export class TransactionService {
   ) {}
 
   async createTransactions(
-    arr: { sum?: number; category_id?: number }[],
+    transactions: { sum?: number; category_id?: number }[],
     billId: number,
   ) {
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i].category_id && arr[i].sum) {
-        const transaction = this.transactionRepository.create({
-          value: arr[i].sum,
-          bill_id: billId,
-          category_id: arr[i].category_id,
-        });
-        this.transactionRepository.save(transaction);
-      } else {
+    for (const { sum, category_id } of transactions) {
+      if (!sum && !category_id) {
         return false;
       }
+      const transactionObj = this.transactionRepository.create({
+        value: sum,
+        bill_id: billId,
+        category_id: category_id,
+      });
+      await this.transactionRepository.save(transactionObj);
     }
     return true;
   }

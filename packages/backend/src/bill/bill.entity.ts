@@ -11,10 +11,7 @@ import { UserEntity } from '../user/user.entity';
 import { AccountEntity } from '../account/account.entity';
 import { CurrencyEntity } from '../currency/currency.entity';
 import { TransactionEntity } from './transaction/transaction.entity';
-import {
-  BillTypeEnum,
-  BillStatusEnum,
-} from '../contracts/commands/bill/bill.types';
+import { BillTypeEnum, BillStatusEnum } from '../../../../contracts/';
 
 @Entity({
   name: 'bill',

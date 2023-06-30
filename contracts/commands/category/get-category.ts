@@ -1,10 +1,16 @@
 import { z } from 'zod';
-import { BillTypeEnum } from '../bill/bill.types';
+import { CategoryTypeEnum } from './category.types';
+import { createZodDto } from 'nestjs-zod';
 
-export const GetCategoryResponseSchema = z.array(
+
+const GetCategoryResponseSchema = z.array(
   z.object({
     id: z.number(),
     name: z.string(),
-    type: z.nativeEnum(BillTypeEnum),
+    type: z.nativeEnum(CategoryTypeEnum),
   }),
 );
+
+export class CategoryResponseDto extends createZodDto(
+  GetCategoryResponseSchema,
+) {}

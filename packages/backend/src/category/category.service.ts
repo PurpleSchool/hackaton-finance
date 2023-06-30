@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryEntity } from './category.entity';
 import { Repository } from 'typeorm';
-import { CategoryTypeEnum } from './category.types';
+import { CategoryTypeEnum } from '../../../../contracts';
 
 @Injectable()
 export class CategoryService {

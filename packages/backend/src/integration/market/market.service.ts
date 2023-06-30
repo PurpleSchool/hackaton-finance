@@ -8,7 +8,7 @@ import {
   ExchangeRateBadResponseDto,
   ExchangeRateDto,
   ExchangeRateResponseDto,
-} from 'src/contracts/commands/currency/get-exchange-rate';
+} from '../../../../../contracts';
 
 @Injectable()
 export class MarketService {

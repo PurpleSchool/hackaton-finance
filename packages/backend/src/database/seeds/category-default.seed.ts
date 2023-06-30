@@ -1,7 +1,7 @@
 import { Connection } from 'typeorm';
 import { Factory, Seeder } from 'typeorm-seeding';
 import { CategoryEntity } from '../../category/category.entity';
-import { CategoryTypeEnum } from '../../category/category.types';
+import { CategoryTypeEnum } from '../../../../../contracts';
 
 export default class CategoryDefaultSeed implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<void> {
