@@ -1,27 +1,26 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AccountEntity } from './account.entity';
 import { Repository } from 'typeorm/repository/Repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ACCOUNT_NOT_FOUND_ERROR } from './account.constants';
 import { CreateAccountDto } from '../../../../contracts';
+import { PrismaService } from '../database/prisma.service';
 
 @Injectable()
 export class AccountService {
-  constructor(
-    @InjectRepository(AccountEntity)
-    private billRepository: Repository<AccountEntity>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async createAccount(dto: CreateAccountDto, userId: number) {
-    const account = this.billRepository.create({
-      name: dto.name,
-      owner_id: userId,
+    const account = this.prisma.account.create({
+      data: {
+        name: dto.name,
+        ownerId: userId,
+      },
     });
-    return this.billRepository.save(account);
+    return account;
   }
 
   async findAccount(id: number) {
-    const account = await this.billRepository.findOneBy({ id });
+    const account = await this.prisma.account.findUnique({ where: { id } });
     if (!account) {
       throw new NotFoundException(ACCOUNT_NOT_FOUND_ERROR);
     }
@@ -30,9 +29,9 @@ export class AccountService {
   }
 
   async findAccountsByOwner(userId: number) {
-    const accountsByOwner = await this.billRepository.find({
+    const accountsByOwner = await this.prisma.account.findMany({
       where: {
-        owner_id: userId,
+        ownerId: userId,
       },
     });
     if (!accountsByOwner.length) {
@@ -43,8 +42,8 @@ export class AccountService {
   }
 
   async deleteAccount(id: number) {
-    const deletedAccount = await this.billRepository.delete(id);
-    if (!deletedAccount.affected) {
+    const deletedAccount = await this.prisma.account.delete({ where: { id } });
+    if (!deletedAccount) {
       throw new NotFoundException(ACCOUNT_NOT_FOUND_ERROR);
     }
 

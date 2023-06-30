@@ -1,72 +1,76 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { BillEntity } from './bill.entity';
 import { NotFoundException } from '@nestjs/common';
 import { BILL_NOT_FOUND_ERROR } from './bill.constants';
-import { CreateBillDto } from '../../../../contracts/';
+import {
+  BillStatusEnum,
+  BillTypeEnum,
+  CreateBillDto,
+} from '../../../../contracts/';
+import { PrismaService } from '../database/prisma.service';
+import { Bill } from '@prisma/client';
 
 @Injectable()
 export class BillService {
-  constructor(
-    @InjectRepository(BillEntity)
-    private billRepository: Repository<BillEntity>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findBill(id: number) {
-    const bill = await this.billRepository.findOneBy({ id });
+    const bill = await this.prisma.bill.findUnique({ where: { id } });
     if (!bill) {
       throw new NotFoundException(BILL_NOT_FOUND_ERROR);
     }
 
-    return bill;
+    return this.mapToModel(bill);
+  }
+
+  private mapToModel(bill: Bill) {
+    return {
+      ...bill,
+      type: bill.type as BillTypeEnum,
+      status: bill.status as BillStatusEnum,
+    };
   }
 
   async findBillsByUserId(userId: number) {
-    const billsByUser = await this.billRepository.find({
-      where: {
-        user_id: userId,
-      },
-    });
-    if (!billsByUser.length) {
+    const bill = await this.prisma.bill.findMany({ where: { userId } });
+    if (!bill.length) {
       throw new NotFoundException();
     }
 
-    return billsByUser;
+    return bill.map(this.mapToModel);
   }
 
   async findBillsByAccountId(accountId: number) {
-    const billsByAccount = await this.billRepository.find({
-      where: {
-        account_id: accountId,
-      },
+    const bill = await this.prisma.bill.findMany({
+      where: { accountId },
     });
-    if (!billsByAccount.length) {
+    if (!bill.length) {
       throw new NotFoundException();
     }
 
-    return billsByAccount;
+    return bill.map(this.mapToModel);
   }
 
   async createBill(dto: CreateBillDto, userId: number) {
-    const bill = this.billRepository.create({
-      user_id: userId,
-      account_id: dto.account_id,
-      currency_id: dto.currency_id,
-      type: dto.type,
-      status: dto.status,
-      date: dto.date,
+    const bill = await this.prisma.bill.create({
+      data: {
+        userId,
+        accountId: dto.accountId,
+        currencyId: dto.currencyId,
+        type: dto.type,
+        status: dto.status,
+        date: dto.date,
+      },
     });
-    return this.billRepository.save(bill);
+    return this.mapToModel(bill);
   }
 
   async deleteBill(id: number) {
-    const deletedBill = await this.billRepository.delete(id);
-    if (!deletedBill.affected) {
+    const deletedBill = await this.prisma.bill.delete({ where: { id } });
+    if (!deletedBill) {
       throw new NotFoundException(BILL_NOT_FOUND_ERROR);
     }
 
-    return deletedBill;
+    return this.mapToModel(deletedBill);
   }
 
   async updateBill(
@@ -74,18 +78,21 @@ export class BillService {
     userId: number,
     dto: Omit<CreateBillDto, 'transactions'>,
   ) {
-    const updatedBill = await this.billRepository.update(id, {
-      user_id: userId,
-      account_id: dto.account_id,
-      currency_id: dto.currency_id,
-      date: dto.date,
-      status: dto.status,
-      type: dto.type,
+    const updatedBill = await this.prisma.bill.update({
+      where: { id },
+      data: {
+        userId,
+        accountId: dto.accountId,
+        currencyId: dto.currencyId,
+        date: dto.date,
+        status: dto.status,
+        type: dto.type,
+      },
     });
-    if (!updatedBill.affected) {
+    if (!updatedBill) {
       throw new NotFoundException(BILL_NOT_FOUND_ERROR);
     }
 
-    return updatedBill;
+    return this.mapToModel(updatedBill);
   }
 }

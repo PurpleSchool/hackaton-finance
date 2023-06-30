@@ -1,17 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CategoryEntity } from './category.entity';
-import { Repository } from 'typeorm';
 import { CategoryTypeEnum } from '../../../../contracts';
+import { PrismaService } from '../database/prisma.service';
+import { Category } from '@prisma/client';
 
 @Injectable()
 export class CategoryService {
-  constructor(
-    @InjectRepository(CategoryEntity)
-    private readonly categoryRepository: Repository<CategoryEntity>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   public async getByType(categoryType: CategoryTypeEnum) {
-    return this.categoryRepository.find({ where: { type: categoryType } });
+    const category = await this.prisma.category.findMany({
+      where: { type: categoryType },
+    });
+    return category.map(this.mapToModel);
+  }
+
+  private mapToModel(category: Category) {
+    return {
+      ...category,
+      type: category.type as CategoryTypeEnum,
+    };
   }
 }

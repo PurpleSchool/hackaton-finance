@@ -19,7 +19,6 @@ import {
 import { User } from '../decorators/user.decorator';
 import { JwtAuthGuard } from '../user/guards/jwt.guard';
 import { IUserInfo } from '../user/user.interface';
-import { DeleteResult, UpdateResult } from 'typeorm';
 
 @Controller('bill')
 export class BillController {
@@ -39,7 +38,7 @@ export class BillController {
       dto.transactions,
       bill.id,
     );
-    if (!transaction) {
+    if (!transaction.length) {
       throw new BadRequestException();
     }
 
@@ -48,7 +47,7 @@ export class BillController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<DeleteResult> {
+  async delete(@Param('id') id: number) {
     return this.billService.deleteBill(id);
   }
 
@@ -58,7 +57,7 @@ export class BillController {
     @Param('id') id: number,
     @Body() dto: Omit<CreateBillDto, 'transactions'>,
     @User() user: IUserInfo,
-  ): Promise<UpdateResult> {
+  ) {
     return this.billService.updateBill(id, user.userId, dto);
   }
 

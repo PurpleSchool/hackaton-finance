@@ -47,7 +47,7 @@ export class AccountController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<DeleteResult> {
+  async delete(@Param('id') id: number) {
     return this.accountService.deleteAccount(id);
   }
 }

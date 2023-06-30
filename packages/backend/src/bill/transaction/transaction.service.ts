@@ -1,30 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { TransactionEntity } from './transaction.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { PrismaService } from '../../database/prisma.service';
 
 @Injectable()
 export class TransactionService {
-  constructor(
-    @InjectRepository(TransactionEntity)
-    private transactionRepository: Repository<TransactionEntity>,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async createTransactions(
-    transactions: { sum?: number; category_id?: number }[],
+    transactions: { sum?: number; categoryId?: number }[],
     billId: number,
   ) {
-    for (const { sum, category_id } of transactions) {
-      if (!sum && !category_id) {
-        return false;
-      }
-      const transactionObj = this.transactionRepository.create({
-        value: sum,
-        bill_id: billId,
-        category_id: category_id,
-      });
-      await this.transactionRepository.save(transactionObj);
-    }
-    return true;
+    await this.prisma.transaction.createMany({
+      data: transactions.map(({ categoryId, sum: value }) => {
+        return { value, categoryId, billId };
+      }),
+    });
+    return this.prisma.transaction.findMany({ where: { billId } });
   }
 }
