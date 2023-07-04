@@ -6,7 +6,7 @@ import {
   ExchangeRateDto,
   ExchangeRateResponseDto,
   GetAllCurrencyResponseDto,
-} from '../../../../contracts/';
+} from '../../../contracts';
 
 @Controller('currency')
 export class CurrencyController {

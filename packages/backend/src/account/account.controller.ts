@@ -1,13 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AccountService } from './account.service';
-import {
-  AccountResponseDto,
-  CreateAccountDto,
-} from '../../../../contracts/commands/account/create-account';
+import { CreateAccount } from '@contracts';
 import { User } from '../common/decorators/user.decorator';
 import { JwtAuthGuard } from '../user/guards/jwt.guard';
-import { IUserInfo } from '../user/user.interface';
-import { GetAccountsByResponseDto } from '../../../../contracts';
+import { UserInfo } from '../user/user.interface';
+import { GetAccountsByResponseDto } from '../../../contracts';
 
 @Controller('account')
 export class AccountController {
@@ -16,15 +13,15 @@ export class AccountController {
   @UseGuards(JwtAuthGuard)
   @Post('create')
   async create(
-    @Body() dto: CreateAccountDto,
-    @User() user: IUserInfo,
-  ): Promise<AccountResponseDto> {
+    @Body() dto: CreateAccount.Request,
+    @User() user: UserInfo,
+  ): Promise<CreateAccount.Response> {
     return this.accountService.createAccount(dto, user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('by-owner')
-  async findByOwner(@User() user: IUserInfo): Promise<GetAccountsByResponseDto> {
+  async findByOwner(@User() user: UserInfo): Promise<GetAccountsByResponseDto> {
     return this.accountService.findAccountsByOwner(user.userId);
   }
 

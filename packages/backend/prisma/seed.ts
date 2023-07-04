@@ -1,5 +1,5 @@
 import { PrismaClient, Prisma } from '@prisma/client';
-import { CategoryTypeEnum } from '../../../contracts';
+import { CategoryTypeEnum } from '../../contracts';
 
 const prisma = new PrismaClient();
 

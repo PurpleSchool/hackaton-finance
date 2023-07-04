@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ACCOUNT_NOT_FOUND_ERROR } from './account.constants';
-import { CreateAccountDto } from '../../../../contracts';
+import { CreateAccountDto } from '../../../contracts';
 import { PrismaService } from '../common/database/prisma.service';
 
 @Injectable()

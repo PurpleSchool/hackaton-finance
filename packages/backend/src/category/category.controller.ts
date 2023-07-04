@@ -1,7 +1,7 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { JwtAuthGuard } from '../user/guards/jwt.guard';
-import { CategoryResponseDto, CategoryTypeEnum } from '../../../../contracts';
+import { CategoryResponseDto, CategoryTypeEnum } from '../../../contracts';
 
 @Controller('category')
 export class CategoryController {

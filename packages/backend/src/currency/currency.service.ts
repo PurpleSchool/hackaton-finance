@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MarketService } from '../integration/market/market.service';
-import { ExchangeRateDto } from '../../../../contracts/';
+import { ExchangeRateDto } from '../../../contracts';
 import { PrismaService } from '../common/database/prisma.service';
 
 @Injectable()

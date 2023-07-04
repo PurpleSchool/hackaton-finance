@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 import { BILL_NOT_FOUND_ERROR } from './bill.constants';
-import { BillStatusEnum, BillTypeEnum, CreateBillDto } from '../../../../contracts/';
+import { BillStatusEnum, BillTypeEnum, CreateBillDto } from '../../../contracts';
 import { PrismaService } from '../common/database/prisma.service';
 import { Bill } from '@prisma/client';
 
