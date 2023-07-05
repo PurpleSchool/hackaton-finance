@@ -1,12 +1,12 @@
 import { Body, Controller, Get, UseGuards } from '@nestjs/common';
 import { CurrencyService } from './currency.service';
-import { JwtAuthGuard } from 'src/user/guards/jwt.guard';
+import { JwtAuthGuard } from '../user/guards/jwt.guard';
 import {
   ExchangeRateBadResponseDto,
   ExchangeRateDto,
   ExchangeRateResponseDto,
   GetAllCurrencyResponseDto,
-} from '../../../contracts';
+} from '@contracts';
 
 @Controller('currency')
 export class CurrencyController {
