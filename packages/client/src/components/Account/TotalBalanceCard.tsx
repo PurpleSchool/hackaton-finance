@@ -5,8 +5,8 @@ import { Card, CardContent, Typography } from "@mui/material";
 import styles from "./account.module.css";
 
 type TotalBalanceProps = {
-  index: number
-}
+  index: number;
+};
 
 export default function TotalBalanceCard(proops: TotalBalanceProps) {
   const accounts = useStore($accountsStore);
@@ -20,7 +20,10 @@ export default function TotalBalanceCard(proops: TotalBalanceProps) {
     };
   });
   return (
-    <Card className={[styles.accountCard, styles.totalBalanceCard].join(" ")} sx={{zIndex: proops.index}}>
+    <Card
+      className={[styles.accountCard, styles.totalBalanceCard].join(" ")}
+      sx={{ zIndex: proops.index }}
+    >
       <CardContent className={styles.cardCoontent_container}>
         <Typography variant="h6">Current Balance</Typography>
         {BalanceListByCurrency.filter((item) => item.balance !== 0).map(

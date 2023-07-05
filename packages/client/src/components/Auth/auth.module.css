@@ -1,0 +1,18 @@
+.form_container {
+  width: 100%;
+}
+
+.authPage {
+  width: 600px;
+  height: 1000px;
+  height: 100vh;
+  justify-content: space-around;
+}
+
+.formItem {
+  width: 100%;
+}
+
+.formItem:not(:last-child) {
+  padding-bottom: 20px;
+}

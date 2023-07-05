@@ -8,13 +8,7 @@ import {
 import { useStore } from "effector-react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import {
-  $billsStore,
-  IBillWithId,
-  IBill,
-  addBill,
-  updateBill,
-} from "../api/fake/billApi";
+import { IBillWithId, IBill, addBill, updateBill } from "../api/fake/billApi";
 import {
   $transactionsStore,
   addTransaction,

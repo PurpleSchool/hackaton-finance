@@ -142,6 +142,7 @@ body {
 }
 
 .wrapper {
+  box-sizing: border-box;
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
@@ -150,5 +151,4 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  
 }
