@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AccountService } from './account.service';
-import { CreateAccount } from '@contracts';
+import { CreateAccount, FindAccount } from '@contracts';
 import { User } from '../common/decorators/user.decorator';
 import { JwtAuthGuard } from '../user/guards/jwt.guard';
 import { UserInfo } from '../user/user.interface';
@@ -27,7 +27,7 @@ export class AccountController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async find(@Param('id') id: number): Promise<AccountResponseDto> {
+  async find(@Param() { id }: FindAccount.Request): Promise<FindAccount.Response> {
     return this.accountService.findAccount(id);
   }
 
