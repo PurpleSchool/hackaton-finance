@@ -16,9 +16,7 @@ export class IntegrationModule {
     };
   }
 
-  private static createAsyncOptionsProvider(
-    options: IntegrationModuleAsyncOptions,
-  ): Provider {
+  private static createAsyncOptionsProvider(options: IntegrationModuleAsyncOptions): Provider {
     return {
       provide: INTEGRATION_MODULE_OPTIONS,
       useFactory: async (...args: any[]) => {

@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id           Int           @id @default(autoincrement())
+  name         String
+  type         String
+  transactions Transaction[]
+}
+
+model Transaction {
+  id         Int      @id @default(autoincrement())
+  value      Int
+  createdAt  DateTime @default(now()) @map("created_at")
+  categoryId Int
+  billId     Int
+
+  category Category @relation(fields: [categoryId], references: [id])
+  bill     Bill     @relation(fields: [billId], references: [id])
+}
+
+model Bill {
+  id         Int      @id @default(autoincrement())
+  type       String
+  status     String
+  date       DateTime
+  createdAt  DateTime @default(now()) @map("created_at")
+  userId     Int
+  currencyId Int
+  accountId  Int
+
+  transactions Transaction[]
+  user         User          @relation(fields: [userId], references: [id])
+  account      Account       @relation(fields: [accountId], references: [id])
+  currency     Currency      @relation(fields: [currencyId], references: [id])
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  password String
+
+  accounts Account[]
+  bills    Bill[]
+}
+
+model Account {
+  id      Int    @id @default(autoincrement())
+  name    String
+  ownerId Int
+  bills   Bill[]
+
+  user User @relation(fields: [ownerId], references: [id])
+}
+
+model Currency {
+  id    Int    @id @default(autoincrement())
+  name  String
+  code  String
+  bills Bill[]
+}
