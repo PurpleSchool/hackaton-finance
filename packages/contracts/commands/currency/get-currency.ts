@@ -10,6 +10,6 @@ const GetAllCurrencyResponseSchema = z.array(
   }),
 );
 
-export class GetAllCurrencyResponseDto extends createZodDto(
-  GetAllCurrencyResponseSchema,
-) {}
+export namespace GetCurrency {
+  export class Response extends createZodDto(GetAllCurrencyResponseSchema,) {}
+}

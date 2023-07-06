@@ -25,6 +25,12 @@ const BillResponseSchema = z.object({
   status: z.nativeEnum(BillStatusEnum),
   date: z.coerce.date(),
   createdAt: z.coerce.date(),
+  transactions: z.array(
+    z.object({
+      sum: z.number(),
+      categoryId: z.number(),
+    })
+  ),
 });
 
 const GetBillsByResponseSchema = z.array(
@@ -38,11 +44,16 @@ const GetBillsByResponseSchema = z.array(
     createdAt: z.coerce.date(),
   })
 );
+export namespace CreateBill {
+  export class Request extends createZodDto(CreateBillRequestSchema) {}
+  export class Response extends createZodDto(BillResponseSchema) {}
+}
 
-export class CreateBillDto extends createZodDto(CreateBillRequestSchema) {}
+export namespace GetBill {
+  export class Response extends createZodDto(BillResponseSchema) {}
+}
 
-export class BillResponseDto extends createZodDto(BillResponseSchema) {}
+export namespace GetBillsBy {
+  export class Response extends createZodDto(GetBillsByResponseSchema) {}
+}
 
-export class GetBillsByResponseDto extends createZodDto(
-  GetBillsByResponseSchema
-) {}

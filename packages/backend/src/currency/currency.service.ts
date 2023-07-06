@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MarketService } from '../integration/market/market.service';
-import { ExchangeRateDto } from '@contracts';
+import { Exchange } from '@contracts';
 import { PrismaService } from '../common/database/prisma.service';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class CurrencyService {
     return this.prisma.currency.findMany();
   }
 
-  public async getExchangeRate(dto: ExchangeRateDto) {
+  public async getExchangeRate(dto: Exchange.Request) {
     return dto.date
       ? this.marketService.getExchangeRateByDate(dto)
       : this.marketService.getExchangeRateLatest(dto);

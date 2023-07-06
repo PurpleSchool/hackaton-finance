@@ -1,10 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AccountService } from './account.service';
-import { CreateAccount, FindAccount } from '@contracts';
+import { Account, FindAccount, FindAccountsBy } from '@contracts';
 import { User } from '../common/decorators/user.decorator';
 import { JwtAuthGuard } from '../user/guards/jwt.guard';
 import { UserInfo } from '../user/user.interface';
-import { GetAccountsByResponseDto } from '../../../contracts';
 
 @Controller('account')
 export class AccountController {
@@ -13,15 +12,15 @@ export class AccountController {
   @UseGuards(JwtAuthGuard)
   @Post('create')
   async create(
-    @Body() dto: CreateAccount.Request,
+    @Body() dto: Account.Request,
     @User() user: UserInfo,
-  ): Promise<CreateAccount.Response> {
+  ): Promise<Account.Response> {
     return this.accountService.createAccount(dto, user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('by-owner')
-  async findByOwner(@User() user: UserInfo): Promise<GetAccountsByResponseDto> {
+  async findByOwner(@User() user: UserInfo): Promise<FindAccountsBy.Response> {
     return this.accountService.findAccountsByOwner(user.userId);
   }
 
@@ -33,7 +32,7 @@ export class AccountController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id: number) {
+  async delete(@Param('id') id: number): Promise<Account.Response> {
     return this.accountService.deleteAccount(id);
   }
 }

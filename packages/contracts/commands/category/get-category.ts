@@ -11,6 +11,6 @@ const GetCategoryResponseSchema = z.array(
   }),
 );
 
-export class CategoryResponseDto extends createZodDto(
-  GetCategoryResponseSchema,
-) {}
+export namespace GetCategory {
+  export class Response extends createZodDto(GetCategoryResponseSchema,) {}
+}

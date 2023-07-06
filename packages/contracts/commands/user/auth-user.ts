@@ -13,13 +13,9 @@ const RegisterUserResponseSchema = z.object({
 const LoginUserResponseSchema = z.object({
   accessToken: z.string(),
 });
+export namespace User {
+  export class Request extends createZodDto(AuthUserRequstSchema) {}
+  export class RegisterResponse extends createZodDto(RegisterUserResponseSchema,) {}
+  export class LoginResponse extends createZodDto(LoginUserResponseSchema,) {}
+}
 
-export class UserDto extends createZodDto(AuthUserRequstSchema) {}
-
-export class UserRegisterResponseDto extends createZodDto(
-  RegisterUserResponseSchema,
-) {}
-
-export class UserLoginResponseDto extends createZodDto(
-  LoginUserResponseSchema,
-) {}

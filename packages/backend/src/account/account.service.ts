@@ -1,16 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ACCOUNT_NOT_FOUND_ERROR } from './account.constants';
 import { PrismaService } from '../common/database/prisma.service';
-import { CreateAccount } from '../../../contracts';
+import { Account } from '../../../contracts';
 
 @Injectable()
 export class AccountService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createAccount(dto: CreateAccount.Request, userId: number) {
+  async createAccount(dto: Account.Request, userId: number) {
     const account = this.prisma.account.create({
       data: {
         name: dto.name,
+        currencyId: dto.currencyId,
         ownerId: userId,
       },
     });
@@ -40,7 +41,7 @@ export class AccountService {
   }
 
   async deleteAccount(id: number) {
-    const deletedAccount = await this.prisma.account.delete({ where: { id } });
+    const deletedAccount = await this.prisma.account.delete({ where: { id: +id } });
     if (!deletedAccount) {
       throw new NotFoundException(ACCOUNT_NOT_FOUND_ERROR);
     }

@@ -10,5 +10,6 @@ const GetAccountsByOwnerResponseSchema = z.array(
   }),
 );
 
-
-export class GetAccountsByResponseDto extends createZodDto(GetAccountsByOwnerResponseSchema) {}
+export namespace FindAccountsBy {
+  export class Response extends createZodDto(GetAccountsByOwnerResponseSchema) {}
+}

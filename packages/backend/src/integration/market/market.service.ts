@@ -4,11 +4,7 @@ import { AxiosError } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { IntegrationsOptions } from '../integration.types';
 import { INTEGRATION_MODULE_OPTIONS } from '../integration.constants';
-import {
-  ExchangeRateBadResponseDto,
-  ExchangeRateDto,
-  ExchangeRateResponseDto,
-} from '../../../../contracts';
+import { Exchange } from '../../../../contracts';
 
 @Injectable()
 export class MarketService {
@@ -20,11 +16,11 @@ export class MarketService {
     private readonly httpService: HttpService,
   ) {}
 
-  public async getExchangeRateByDate({ toCurrency, fromCurrencies, date }: ExchangeRateDto) {
+  public async getExchangeRateByDate({ toCurrency, fromCurrencies, date }: Exchange.Request) {
     const symbols = fromCurrencies.join(',');
     const { data } = await firstValueFrom(
       this.httpService
-        .get<ExchangeRateResponseDto | ExchangeRateBadResponseDto>(
+        .get<Exchange.Response | Exchange.BadResponse>(
           `${URL}/${date}?base=${toCurrency}&symbols=${symbols}`,
           {
             headers: { apiKey: this.options.apiKey },
@@ -39,11 +35,11 @@ export class MarketService {
     return data;
   }
 
-  public async getExchangeRateLatest({ toCurrency, fromCurrencies }: ExchangeRateDto) {
+  public async getExchangeRateLatest({ toCurrency, fromCurrencies }: Exchange.Request) {
     const symbols = fromCurrencies.join(',');
     const { data } = await firstValueFrom(
       this.httpService
-        .get<ExchangeRateResponseDto | ExchangeRateBadResponseDto>(
+        .get<Exchange.Response | Exchange.BadResponse>(
           `${URL}/latest?base=${toCurrency}&symbols=${symbols}`,
           {
             headers: { apiKey: this.options.apiKey },
