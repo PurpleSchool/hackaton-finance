@@ -11,5 +11,6 @@ const GetAllCurrencyResponseSchema = z.array(
 );
 
 export namespace GetCurrency {
+  export class Request {}
   export class Response extends createZodDto(GetAllCurrencyResponseSchema,) {}
 }

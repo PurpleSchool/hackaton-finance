@@ -41,7 +41,7 @@ export class AccountService {
   }
 
   async deleteAccount(id: number) {
-    const deletedAccount = await this.prisma.account.delete({ where: { id: +id } });
+    const deletedAccount = await this.prisma.account.delete({ where: { id } });
     if (!deletedAccount) {
       throw new NotFoundException(ACCOUNT_NOT_FOUND_ERROR);
     }

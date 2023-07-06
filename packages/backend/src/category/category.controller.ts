@@ -10,8 +10,8 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard)
   @Get('by-type')
   public async getByType(
-    @Query('type') categoryType: CategoryTypeEnum,
+    @Query() { type }: GetCategory.Request,
   ): Promise<GetCategory.Response> {
-    return this.categoryService.getByType(categoryType);
+    return this.categoryService.getByType(type);
   }
 }

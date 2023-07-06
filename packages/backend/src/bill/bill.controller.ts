@@ -11,10 +11,11 @@ import {
 } from '@nestjs/common';
 import { BillService } from './bill.service';
 import { TransactionService } from './transaction/transaction.service';
-import { CreateBill, GetBill, GetBillsBy } from '../../../contracts/commands/bill/create-bill';
+import { CreateBill } from '../../../contracts/commands/bill/create-bill';
 import { User } from '../common/decorators/user.decorator';
 import { JwtAuthGuard } from '../user/guards/jwt.guard';
 import { UserInfo } from '../user/user.interface';
+import { FindBill, FindBillsBy } from '../../../contracts';
 
 @Controller('bill')
 export class BillController {
@@ -33,35 +34,35 @@ export class BillController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<GetBill.Response> {
+  async delete(@Param() { id }: FindBill.Request): Promise<FindBill.Response> {
     return this.billService.deleteBill(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(
-    @Param('id') id: number,
+    @Param() { id }: FindBill.Request,
     @Body() dto: Omit<CreateBill.Request, 'transactions'>,
     @User() user: UserInfo,
-  ): Promise<GetBill.Response> {
+  ): Promise<FindBill.Response> {
     return this.billService.updateBill(id, user.userId, dto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('by-user')
-  async findByUser(@User() user: UserInfo): Promise<GetBillsBy.Response> {
+  async findByUser(@User() user: UserInfo): Promise<FindBillsBy.Response> {
     return this.billService.findBillsByUserId(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('by-account/:accountId')
-  async findByAccount(@Param('accountId') accountId: number): Promise<GetBillsBy.Response> {
+  async findByAccount(@Param() { accountId }: FindBillsBy.AccountRequest): Promise<FindBillsBy.Response> {
     return this.billService.findBillsByAccountId(accountId);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async find(@Param('id') id: number): Promise<GetBill.Response> {
+  async find(@Param() { id }: FindBill.Request): Promise<FindBill.Response> {
     return this.billService.findBill(id);
   }
 }

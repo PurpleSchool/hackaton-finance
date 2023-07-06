@@ -7,9 +7,9 @@ import { Category } from '@prisma/client';
 export class CategoryService {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async getByType(categoryType: CategoryTypeEnum) {
+  public async getByType(type: CategoryTypeEnum) {
     const category = await this.prisma.category.findMany({
-      where: { type: categoryType },
+      where: { type },
     });
     return category.map(this.mapToModel);
   }

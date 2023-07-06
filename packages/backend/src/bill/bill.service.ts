@@ -10,7 +10,7 @@ export class BillService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findBill(id: number) {
-    const bill = await this.prisma.bill.findUnique({ where: { id: +id } });
+    const bill = await this.prisma.bill.findUnique({ where: { id } });
     if (!bill) {
       throw new NotFoundException(BILL_NOT_FOUND_ERROR);
     }
@@ -29,7 +29,7 @@ export class BillService {
 
   async findBillsByAccountId(accountId: number) {
     const bill = await this.prisma.bill.findMany({
-      where: { accountId: +accountId },
+      where: { accountId },
     });
     if (!bill.length) {
       throw new NotFoundException();
@@ -53,7 +53,7 @@ export class BillService {
   }
 
   async deleteBill(id: number) {
-    const deletedBill = await this.prisma.bill.delete({ where: { id: +id } });
+    const deletedBill = await this.prisma.bill.delete({ where: { id } });
     if (!deletedBill) {
       throw new NotFoundException(BILL_NOT_FOUND_ERROR);
     }

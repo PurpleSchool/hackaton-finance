@@ -32,7 +32,7 @@ export class AccountController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id: number): Promise<Account.Response> {
+  async delete(@Param() { id }: FindAccount.Request): Promise<Account.Response> {
     return this.accountService.deleteAccount(id);
   }
 }
