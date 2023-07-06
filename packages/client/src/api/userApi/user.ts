@@ -11,7 +11,7 @@ export const regUser = async (
 ): Promise<AxiosResponse<{ name: string }>> => {
   const responce = await request<{ name: string }>({
     method: "post",
-    url: "register",
+    url: "user/register",
     data: { ...data },
   });
   return responce;
@@ -22,7 +22,7 @@ export const loginUser = async (
 ): Promise<AxiosResponse<{ accessToken: string }>> => {
   const response = await request<{ accessToken: string }>({
     method: "post",
-    url: "login",
+    url: "user/login",
     data: { ...data },
   });
   return response;

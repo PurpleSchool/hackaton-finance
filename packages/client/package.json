@@ -25,7 +25,10 @@
     "react-router-dom": "^6.11.2",
     "uuid": "^9.0.0"
   },
+  "types": "../../node_modules/effector-logger/index.d.ts",
   "devDependencies": {
+    "@effector/swc-plugin": "^0.0.10",
+    "@swc/core": "^1.3.68",
     "@types/react": "^18.0.37",
     "@types/react-dom": "^18.0.11",
     "@types/uuid": "^9.0.2",

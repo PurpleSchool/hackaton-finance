@@ -14,5 +14,7 @@
 }
 
 .formItem:not(:last-child) {
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
+
+

@@ -1,14 +1,10 @@
 import { createEvent, createStore } from "effector";
 
-interface IUserStore {
-  userName: string | null;
-}
-
-export const setUser = createEvent<IUserStore>();
+export const setUser = createEvent<string>();
 export const logoutUser = createEvent();
 
-export const $userStore = createStore<IUserStore>({ userName: null })
+export const $userStore = createStore<string | null>(null)
   .on(setUser, (_, payload) => payload)
-  .on(logoutUser, (store) => {
-    store.userName = null;
-  });
+  .reset(logoutUser);
+
+$userStore.watch((name) => console.log(name));

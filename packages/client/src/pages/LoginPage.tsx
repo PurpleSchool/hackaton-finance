@@ -7,14 +7,10 @@ import { SubmitHandler } from "react-hook-form";
 import { IUserAuthData, loginUser } from "../api/userApi/user";
 import { useState } from "react";
 import { setUser } from "../store/UserStore";
+import { ICustomError } from "../entities/Errors";
 
-export default function LoginPage() {
+export default function LoginPage(props?: IUserAuthData) {
   usePageTitle("Login");
-
-  interface ICustomError {
-    message: string;
-    code: number;
-  }
 
   const navigate = useNavigate();
 
@@ -28,13 +24,15 @@ export default function LoginPage() {
     try {
       const responce = await loginUser(data);
       localStorage.setItem("token", responce.data.accessToken);
-      setUser({ userName: data.name });
-      navigate("/");
+      setUser(data.name);
     } catch (error) {
       const customError = error as ICustomError;
       setError(customError);
     }
     setLoading(false);
+    if (!error) {
+      navigate("/");
+    }
   };
   return (
     <div className={["wrapper", styles.authPage].join(" ")}>

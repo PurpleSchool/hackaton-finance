@@ -1,7 +1,7 @@
 import { Alert, AlertTitle, Button, Typography } from "@mui/material";
 import SvgGenerator from "../helpers/SvgGenerator";
 import usePageTitle from "../hooks/usePageTitle";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import styles from "../components/Auth/auth.module.css";
 import AuthForm from "../components/Auth/AuthForm";
 import { SubmitHandler } from "react-hook-form";
@@ -23,17 +23,20 @@ export default function RegistrationPage() {
     setLoading(true);
     try {
       const responce = await regUser(data);
-      navigate("login");
     } catch (error) {
       const customError = error as ICustomError;
       setError(customError);
     }
     setLoading(false);
+    if (!error) {
+      navigate("/login", {
+        state: { name: data.name, password: data.password },
+      });
+    }
   };
 
   return (
     <div className={["wrapper", styles.authPage].join(" ")}>
-      
       <AuthForm
         type="registration"
         onSubmit={onSunmit}
