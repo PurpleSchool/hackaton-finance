@@ -1,13 +1,12 @@
-import { Alert, AlertTitle, Button, Typography } from "@mui/material";
-import SvgGenerator from "../helpers/SvgGenerator";
-import usePageTitle from "../hooks/usePageTitle";
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { Button, Typography } from "@mui/material";
+import usePageTitle from "../../hooks/usePageTitle";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../components/Auth/auth.module.css";
-import AuthForm from "../components/Auth/AuthForm";
+import AuthForm from "../../components/Auth/AuthForm";
 import { SubmitHandler } from "react-hook-form";
-import { IUserAuthData, regUser } from "../api/userApi/user";
+import { UserDto, regUser } from "../../api/userApi/user";
 import { useState } from "react";
-import { ICustomError } from "../entities/Errors";
+import { ICustomError } from "../../entities/Errors";
 
 export default function RegistrationPage() {
   usePageTitle("Registration");
@@ -17,9 +16,7 @@ export default function RegistrationPage() {
   const [error, setError] = useState<ICustomError>();
   const [loading, setLoading] = useState(false);
 
-  const onSunmit: SubmitHandler<IUserAuthData> = async (
-    data: IUserAuthData
-  ) => {
+  const onSunmit: SubmitHandler<UserDto> = async (data: UserDto) => {
     setLoading(true);
     try {
       const responce = await regUser(data);

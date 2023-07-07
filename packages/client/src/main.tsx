@@ -4,9 +4,8 @@ import "./index.css";
 import { ThemeProvider } from "@mui/material";
 import theme from "./theme.ts";
 import MainPage from "./pages/MainPage.tsx";
-import LoginPage from "./pages/LoginPage.tsx";
+import LoginPage from "./pages/auth/LoginPage.tsx";
 import RegistrationPage from "./pages/RegistrationPage.tsx";
-
 
 const router = createBrowserRouter([
   { path: "/", element: <MainPage /> },
@@ -16,7 +15,6 @@ const router = createBrowserRouter([
   },
   { path: "registration", element: <RegistrationPage /> },
 ]);
-
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   // <React.StrictMode>

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import AccountList from "../components/Account/AccountList";
 import { useNavigate } from "react-router-dom";
-import { $userStore, logoutUser } from "../store/UserStore";
+import { $userStore } from "../store/UserStore";
 import { useStore } from "effector-react";
 import Header from "../components/Header";
 
