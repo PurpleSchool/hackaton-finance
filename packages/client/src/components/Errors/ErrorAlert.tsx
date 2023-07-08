@@ -1,5 +1,5 @@
 import { Alert, AlertTitle } from "@mui/material";
-import { ICustomError } from "../entities/Errors";
+import { ICustomError } from "../../entities/Errors";
 
 interface IErrorAlertProps {
   error: ICustomError;

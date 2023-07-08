@@ -1,14 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
 import usePageTitle from "../../hooks/usePageTitle";
-import styles from "../components/Auth/auth.module.css";
+import styles from "../../components/Auth/auth.module.css";
 import AuthForm from "../../components/Auth/AuthForm";
 import { SubmitHandler } from "react-hook-form";
-import { UserDto, loginUser } from "../../api/userApi/user";
+import { UserDto, loginUser } from "../../api/user";
 import { useState } from "react";
 import { setUser } from "../../store/UserStore";
 import { ICustomError } from "../../entities/Errors";
- 
+
 export default function LoginPage() {
   usePageTitle("Login");
 
@@ -17,9 +17,7 @@ export default function LoginPage() {
   const [error, setError] = useState<ICustomError>();
   const [loading, setLoading] = useState(false);
 
-  const onSunmit: SubmitHandler<UserDto> = async (
-    data: UserDto
-  ) => {
+  const onSunmit: SubmitHandler<UserDto> = async (data: UserDto) => {
     setLoading(true);
     try {
       const responce = await loginUser(data);

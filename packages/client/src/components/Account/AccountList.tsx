@@ -1,20 +1,30 @@
-import { useStore } from "effector-react";
 import TotalBalanceCard from "./TotalBalanceCard";
-import { $accountsStore } from "../../api/fake/accountApi";
 import AccountCard from "./AccountCard";
 import styles from "./account.module.css";
 import AddNewAccountCard from "./AddNewAccountCard";
+import {
+  $accountsStore,
+  $addAccountRegError,
+  getAccountsByOwner,
+} from "../../store/AccountStore";
+import { useStore } from "effector-react";
+import {  useState } from "react";
+import AddNewAccountModal from "./AddNewAccountModal";
+import ErrorAlert from "../Errors/ErrorAlert";
 
 export default function AccountList() {
-  const accounts = useStore($accountsStore);
-
+  const accountsList = useStore($accountsStore);
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const errors = useStore($addAccountRegError);
   return (
     <div className={styles.accountList_container}>
-      <TotalBalanceCard index={accounts.length}/>
-      {accounts.map((account, index) => (
-        <AccountCard key={account.id} account={account} index={index}/>
+      {errors !== null && <ErrorAlert error={errors} />}
+      <AddNewAccountModal open={isModalOpen} handleClose={setModalOpen} />
+      <TotalBalanceCard />
+      {accountsList.map((account) => (
+        <AccountCard key={account.id} {...account} />
       ))}
-      <AddNewAccountCard />
+      <AddNewAccountCard setModalOpen={setModalOpen} />
     </div>
   );
 }

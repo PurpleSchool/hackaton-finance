@@ -1,10 +1,10 @@
 import { Button, Typography } from "@mui/material";
 import usePageTitle from "../../hooks/usePageTitle";
 import { Link, useNavigate } from "react-router-dom";
-import styles from "../components/Auth/auth.module.css";
+import styles from "../../components/Auth/auth.module.css";
 import AuthForm from "../../components/Auth/AuthForm";
 import { SubmitHandler } from "react-hook-form";
-import { UserDto, regUser } from "../../api/userApi/user";
+import { UserDto, regUser } from "../../api/user";
 import { useState } from "react";
 import { ICustomError } from "../../entities/Errors";
 

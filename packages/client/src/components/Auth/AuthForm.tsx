@@ -1,36 +1,29 @@
 import { Box, Button, TextField } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 import styles from "./auth.module.css";
-import { IUserAuthData } from "../../api/userApi/user";
+import { UserDto } from "../../api/user";
 import { ICustomError } from "../../entities/Errors";
 import SvgGenerator from "../../helpers/SvgGenerator";
-import ErrorAlert from "../ErrorAlert";
-import FormValidationError from "../FormValidationError";
-import { useEffect } from "react";
+import ErrorAlert from "../Errors/ErrorAlert";
+import FormValidationError from "../Form/FormValidationError";
 import { useLocation } from "react-router-dom";
+import { ICustomLocationWithState } from "../../entities/Location";
 
 type AuthFormProps = {
   type: "login" | "registration";
-  onSubmit: SubmitHandler<IUserAuthData>;
+  onSubmit: SubmitHandler<UserDto>;
   loading: boolean;
   error: ICustomError | undefined;
 };
 
-interface ICustomLocationWithState {
-  state: {
-    name: string | undefined;
-    password: string | undefined;
-  };
-}
-
 export default function AuthForm(props: AuthFormProps) {
   const location = useLocation() as ICustomLocationWithState;
-  useEffect(() => console.log(), []);
+
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<IUserAuthData>({
+  } = useForm<UserDto>({
     mode: "onBlur",
     defaultValues: {
       name: location.state?.name || "",

@@ -6,10 +6,10 @@ import {
   Typography,
 } from "@mui/material";
 import { useStore } from "effector-react";
-import { IBillWithId, removeBill } from "../api/fake/billApi";
-import { $categorysStore } from "../api/fake/categoryApi";
-import { $transactionsStore } from "../api/fake/transactionsApi";
-import { $currencysStore } from "../api/fake/currencyApi";
+import { IBillWithId, removeBill } from "../../api/fake/billApi";
+import { $categorysStore } from "../../api/fake/categoryApi";
+import { $transactionsStore } from "../../api/fake/transactionsApi";
+import { $currencysStore } from "../../api/fake/currencyApi";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";

@@ -5,7 +5,8 @@ import { ThemeProvider } from "@mui/material";
 import theme from "./theme.ts";
 import MainPage from "./pages/MainPage.tsx";
 import LoginPage from "./pages/auth/LoginPage.tsx";
-import RegistrationPage from "./pages/RegistrationPage.tsx";
+import RegistrationPage from "./pages/auth/RegistrationPage.tsx";
+
 
 const router = createBrowserRouter([
   { path: "/", element: <MainPage /> },

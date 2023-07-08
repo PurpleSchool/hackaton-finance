@@ -8,6 +8,7 @@ import Header from "../components/Header";
 export default function MainPage() {
   const navigate = useNavigate();
   let userName = useStore($userStore);
+
   useEffect(() => {
     if (
       userName === null ||

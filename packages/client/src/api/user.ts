@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
-import { request } from "../../http";
-import { User } from "../../../../contracts";
+import { request } from "../http";
+import { User } from "../../../contracts";
 
 export type UserDto = User.Request;
 

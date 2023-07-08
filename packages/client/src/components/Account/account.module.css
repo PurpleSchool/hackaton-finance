@@ -1,4 +1,5 @@
 .accountCard {
+  position: relative;
   aspect-ratio: 420/250;
   min-width: 200px;
   width: 10vw;
@@ -8,17 +9,16 @@
   align-items: center;
   justify-content: center;
 }
-.accountCard:not(:first-child) {
-  margin-left: -100px;
+.accountCard:not(:first-child, :last-child) {
+  background-color: black;
 }
 
-.accountCard:hover + .accountCard{
+.accountCard:hover + .accountCard {
   margin-left: 0;
 }
 
 .totalBalanceCard {
   background: url(../../assets/balanceCardBg.svg) no-repeat 60% 60%;
-  
 }
 
 .accountList_container {
@@ -32,14 +32,46 @@ h6 {
   color: white;
 }
 
-.cardCoontent_container {
-  align-items: flex-start;
-  justify-content: flex-start;
-  height: 100%;
-  width: 100%;
-}
-
 div.addNew {
   background-color: var(--blue);
-  z-index: auto;
+}
+
+.modal_container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  background-color: var(--sidebar-background);
+  padding: 35px;
+  border-radius: 15px;
+}
+
+.modal-form_container {
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.account-name {
+  width: 300px;
+}
+
+.account-currency-select {
+  width: 200px;
+}
+
+.accountCard .card-actions {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  padding: 0px;
+  align-self: flex-end;
+}
+
+.card-actions button {
+  padding: 0;
+  display: flex;
+  justify-content: flex-end;
 }

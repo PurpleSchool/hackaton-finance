@@ -1,4 +1,4 @@
-import { createEvent, createStore } from "effector";
+  import { createEvent, createStore } from "effector";
 
 export const setUser = createEvent<string>();
 export const logoutUser = createEvent();
