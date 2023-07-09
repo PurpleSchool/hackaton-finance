@@ -1,18 +1,26 @@
 import { Alert, AlertTitle } from "@mui/material";
-import { ICustomError } from "../../entities/Errors";
+import styles from "./errors.module.css";
 
 interface IErrorAlertProps {
-  error: ICustomError;
+  error: Error;
+  onClose: React.Dispatch<React.SetStateAction<Error[] | null>>;
+  errors: Error[];
 }
 
 export default function ErrorAlert(props: IErrorAlertProps) {
+  const handleOnClose = () => {
+    props.onClose(
+      props.errors.filter((err) => err.message !== props.error.message)
+    );
+  };
   return (
     <Alert
       severity="error"
-      sx={{ position: "absolute", top: "10px", right: 0 }}
+      className={styles["error-alert"]}
+      onClick={() => handleOnClose()}
     >
       <AlertTitle>Error</AlertTitle>
-      {props.error.code} {props.error.message}
+      {props.error.name} {props.error.message}
     </Alert>
   );
 }

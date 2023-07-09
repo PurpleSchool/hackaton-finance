@@ -10,14 +10,20 @@ import { useStore } from "effector-react";
 import { $currencyStore } from "../../store/CurrencyStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteAccount } from "../../api/account";
-import { FindAccount } from "../../../../contracts";
+import { FindAccount, FindAccountsBy } from "../../../../contracts";
 
-export default function AccountCard(props: FindAccount.Response) {
+type AccountCardProps = {
+  account: FindAccount.Response;
+  updateFx: (payload: null) => Promise<FindAccountsBy.Response>;
+};
+
+export default function AccountCard(props: AccountCardProps) {
   const currency = useStore($currencyStore).find(
-    (cur) => cur.id === props.currencyId
+    (cur) => cur.id === props.account.currencyId
   );
   const handleDeleteAccount = async () => {
-    const res = await deleteAccount(props.id);
+    const res = await deleteAccount(props.account.id);
+    props.updateFx(null);
   };
 
   return (
@@ -28,7 +34,7 @@ export default function AccountCard(props: FindAccount.Response) {
         </Button>
       </CardActions>
       <CardContent>
-        <Typography variant="h6">{props.name}</Typography>
+        <Typography variant="h6">{props.account.name}</Typography>
         <Typography variant="h5">{currency?.code}</Typography>
       </CardContent>
     </Card>

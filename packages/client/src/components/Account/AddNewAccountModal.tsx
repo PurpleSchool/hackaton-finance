@@ -49,8 +49,12 @@ export default function AddNewAccountModal(props: AddNewAccountModalProps) {
     props.handleClose(false);
   };
 
+  const handleClose = async () => {
+    props.handleClose(false);
+  };
+
   return (
-    <Modal open={props.open} onClose={() => props.handleClose(false)}>
+    <Modal open={props.open} onClose={() => handleClose()}>
       <Box
         component={"form"}
         onSubmit={handleSubmit(onSubmit)}
@@ -75,6 +79,7 @@ export default function AddNewAccountModal(props: AddNewAccountModalProps) {
               id="account-currency-select"
               labelId="account-currency-label"
               label="Currency"
+              defaultValue={0}
               {...register("currencyId", {
                 required: "Please select a currency",
                 min: { value: 1, message: "Please select a currency" },

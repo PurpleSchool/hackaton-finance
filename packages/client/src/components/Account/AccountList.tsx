@@ -4,26 +4,32 @@ import styles from "./account.module.css";
 import AddNewAccountCard from "./AddNewAccountCard";
 import {
   $accountsStore,
-  $addAccountRegError,
-  getAccountsByOwner,
+  updateAccountsStoreFx,
 } from "../../store/AccountStore";
-import { useStore } from "effector-react";
-import {  useState } from "react";
+import { useEvent, useStore } from "effector-react";
+import { useEffect, useState } from "react";
 import AddNewAccountModal from "./AddNewAccountModal";
-import ErrorAlert from "../Errors/ErrorAlert";
 
 export default function AccountList() {
+  const updateAccounts = useEvent(updateAccountsStoreFx);
   const accountsList = useStore($accountsStore);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
-  const errors = useStore($addAccountRegError);
+  useEffect(() => {
+    updateAccounts(null);
+  }, [isModalOpen]);
+
   return (
     <div className={styles.accountList_container}>
-      {errors !== null && <ErrorAlert error={errors} />}
       <AddNewAccountModal open={isModalOpen} handleClose={setModalOpen} />
       <TotalBalanceCard />
-      {accountsList.map((account) => (
-        <AccountCard key={account.id} {...account} />
-      ))}
+      {Array.isArray(accountsList) &&
+        accountsList.map((account) => (
+          <AccountCard
+            key={account.id}
+            account={account}
+            updateFx={updateAccounts}
+          />
+        ))}
       <AddNewAccountCard setModalOpen={setModalOpen} />
     </div>
   );

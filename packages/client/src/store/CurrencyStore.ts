@@ -1,8 +1,18 @@
-import { createStore } from "effector";
+import { createEffect, createEvent, createStore } from "effector";
 import { currencyList, getCurrency } from "../api/currency";
 
-const initialCurrencyStore = await getCurrency();
+const addGetCurrencyError = createEvent<Error>();
+export const $getCurrencyErrorStore = createStore<Error | null>(null).on(
+  addGetCurrencyError,
+  (_, error) => error
+);
 
+const initialCurrencyStore = await getCurrency()
+  .then((res) => res.data)
+  .catch((e) => {
+    addGetCurrencyError(e);
+    return e;
+  });
 export const $currencyStore = createStore<currencyList>(
-  initialCurrencyStore.data
+  Array.isArray(initialCurrencyStore) ? initialCurrencyStore : []
 );
