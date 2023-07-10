@@ -20,7 +20,7 @@ export const $getAccountsError = createStore<Error | null>(null).on(
   (_, error) => error
 );
 
-const updateAccountsStoreAfterError = createEvent();
+const setAccountsStoreEmpty = createEvent();
 
 export const updateAccountsStoreFx = createEffect<
   null,
@@ -32,12 +32,11 @@ export const updateAccountsStoreFx = createEffect<
     .catch((e) => {
       if ("response" in e) {
         if (e.response.status === 404) {
-          updateAccountsStoreAfterError();
+          setAccountsStoreEmpty();
         } else {
           addGetAccountsError(e);
         }
       }
-
       return e;
     })
 );
@@ -49,7 +48,7 @@ export const $accountsStore = createStore<FindAccountsBy.Response>(
 )
   .on(updateAccountsStoreFx.doneData, (_, data) => data)
   .on(updateAccountsStoreFx.failData, (store) => store)
-  .on(updateAccountsStoreAfterError, (_) => []);
+  .on(setAccountsStoreEmpty, (_) => []);
 
 const addAccountFx = createEffect<AccountDto, AccountRes, Error>(
   async (data) => {
@@ -64,6 +63,11 @@ export const $addAccountRegError = createStore<Error | null>(null).on(
 );
 
 export const addAccount = createEvent<AccountDto>();
+
+export const resetAddAccountPeding = createEvent();
+export const $addAccountPending = createStore<boolean>(false)
+  .on(addAccountFx.doneData, (_) => true)
+  .reset(resetAddAccountPeding);
 
 export const nameChanged = createEvent<string>();
 const $name = createStore<string>("").on(nameChanged, (_, name) => name);

@@ -6,24 +6,25 @@ import {
   Typography,
 } from "@mui/material";
 import styles from "./account.module.css";
-import { useStore } from "effector-react";
+import { useEvent, useStore } from "effector-react";
 import { $currencyStore } from "../../store/CurrencyStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteAccount } from "../../api/account";
-import { FindAccount, FindAccountsBy } from "../../../../contracts";
+import { FindAccount } from "../../../../contracts";
+import { updateAccountsStoreFx } from "../../store/AccountStore";
 
 type AccountCardProps = {
   account: FindAccount.Response;
-  updateFx: (payload: null) => Promise<FindAccountsBy.Response>;
 };
 
 export default function AccountCard(props: AccountCardProps) {
+  const updateAccounts = useEvent(updateAccountsStoreFx);
   const currency = useStore($currencyStore).find(
     (cur) => cur.id === props.account.currencyId
   );
   const handleDeleteAccount = async () => {
     const res = await deleteAccount(props.account.id);
-    props.updateFx(null);
+    updateAccounts(null);
   };
 
   return (

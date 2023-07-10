@@ -7,28 +7,30 @@ import {
   updateAccountsStoreFx,
 } from "../../store/AccountStore";
 import { useEvent, useStore } from "effector-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AddNewAccountModal from "./AddNewAccountModal";
 
 export default function AccountList() {
-  const updateAccounts = useEvent(updateAccountsStoreFx);
   const accountsList = useStore($accountsStore);
+  const updateAccounts = useEvent(updateAccountsStoreFx);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
-  useEffect(() => {
+  const handleCloseModalWithSubmit = () => {
     updateAccounts(null);
-  }, [isModalOpen]);
+    setModalOpen(false);
+  };
 
   return (
     <div className={styles.accountList_container}>
-      <AddNewAccountModal open={isModalOpen} handleClose={setModalOpen} />
-      <TotalBalanceCard />
+      <AddNewAccountModal
+        open={isModalOpen}
+        handleClose={setModalOpen}
+        accountsList={accountsList}
+        handleCloseModalWithSubmit={handleCloseModalWithSubmit}
+      />
+      {Array.isArray(accountsList) && <TotalBalanceCard />}
       {Array.isArray(accountsList) &&
         accountsList.map((account) => (
-          <AccountCard
-            key={account.id}
-            account={account}
-            updateFx={updateAccounts}
-          />
+          <AccountCard key={account.id} account={account} />
         ))}
       <AddNewAccountCard setModalOpen={setModalOpen} />
     </div>
