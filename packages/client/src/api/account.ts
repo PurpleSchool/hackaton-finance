@@ -11,7 +11,7 @@ export const createAccount = async (
   const responce = await request<Account.Response>({
     method: "post",
     url: "account/create",
-    data: { ...data },
+    data: data,
   });
   return responce;
 };
@@ -27,7 +27,7 @@ export const findAccountById = async (
 };
 
 export const findAccountsByOwner = async (): Promise<
-  AxiosResponse<FindAccountsBy.Response >
+  AxiosResponse<FindAccountsBy.Response>
 > => {
   const responce = await request<FindAccountsBy.Response>({
     method: "get",

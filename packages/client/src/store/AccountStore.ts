@@ -12,15 +12,7 @@ import {
   findAccountsByOwner,
 } from "../api/account";
 
-import { FindAccountsBy } from "../../../contracts";
-
-const addGetAccountsError = createEvent<Error>();
-export const $getAccountsError = createStore<Error | null>(null).on(
-  addGetAccountsError,
-  (_, error) => error
-);
-
-const setAccountsStoreEmpty = createEvent();
+import { FindAccountsBy, FindAccount } from "../../../contracts";
 
 export const updateAccountsStoreFx = createEffect<
   null,
@@ -40,6 +32,12 @@ export const updateAccountsStoreFx = createEffect<
       return e;
     })
 );
+const addGetAccountsError = createEvent<Error>();
+export const $getAccountsError = createStore<Error | null>(null)
+  .on(addGetAccountsError, (_, error) => error)
+  .on(updateAccountsStoreFx.failData, (_, err) => err);
+
+const setAccountsStoreEmpty = createEvent();
 
 const initialAccountsStore = await updateAccountsStoreFx(null);
 
@@ -47,7 +45,6 @@ export const $accountsStore = createStore<FindAccountsBy.Response>(
   initialAccountsStore
 )
   .on(updateAccountsStoreFx.doneData, (_, data) => data)
-  .on(updateAccountsStoreFx.failData, (store) => store)
   .on(setAccountsStoreEmpty, (_) => []);
 
 const addAccountFx = createEffect<AccountDto, AccountRes, Error>(
@@ -89,3 +86,13 @@ sample({
   filter: addAccountFx.pending.map((pending) => !pending),
   target: addAccountFx,
 });
+
+export const resetPickedAccount = createEvent();
+export const setPickedAccount = createEvent<FindAccount.Response>();
+export const $pickedAccount = createStore<FindAccount.Response | null>(null)
+  .on(setPickedAccount, (_, account) => account)
+  .reset(resetPickedAccount);
+
+$pickedAccount.watch((acc) =>
+  console.log(acc === null ? "no acc picked" : acc.id)
+);

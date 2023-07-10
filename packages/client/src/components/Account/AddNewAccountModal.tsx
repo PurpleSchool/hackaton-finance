@@ -65,7 +65,7 @@ export default function AddNewAccountModal(props: AddNewAccountModalProps) {
     addAccount(data);
   };
 
-  const handleClose = async () => {
+  const handleClose =  () => {
     props.handleClose(false);
   };
 
@@ -129,9 +129,6 @@ export default function AddNewAccountModal(props: AddNewAccountModalProps) {
         <Button type="submit" variant="contained" disabled={!isValid}>
           Add Account
         </Button>
-        <button onClick={() => props.handleCloseModalWithSubmit()}>
-          close
-        </button>
       </Box>
     </Modal>
   );

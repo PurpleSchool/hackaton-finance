@@ -11,7 +11,10 @@ import { $currencyStore } from "../../store/CurrencyStore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteAccount } from "../../api/account";
 import { FindAccount } from "../../../../contracts";
-import { updateAccountsStoreFx } from "../../store/AccountStore";
+import {
+  setPickedAccount,
+  updateAccountsStoreFx,
+} from "../../store/AccountStore";
 
 type AccountCardProps = {
   account: FindAccount.Response;
@@ -28,7 +31,10 @@ export default function AccountCard(props: AccountCardProps) {
   };
 
   return (
-    <Card className={styles.accountCard}>
+    <Card
+      className={styles.accountCard}
+      onClick={() => setPickedAccount(props.account)}
+    >
       <CardActions className={styles["card-actions"]}>
         <Button onClick={() => handleDeleteAccount()}>
           <DeleteIcon color="error" />

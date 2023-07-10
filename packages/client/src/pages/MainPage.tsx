@@ -6,6 +6,7 @@ import { useStore } from "effector-react";
 import Header from "../components/Header";
 import ErrorAlert from "../components/Errors/ErrorAlert";
 import { $errorsStore } from "../store/ErrorsStore";
+import BillsList from "../components/Bills/BillsList";
 
 export default function MainPage() {
   const navigate = useNavigate();
@@ -25,10 +26,16 @@ export default function MainPage() {
     <div className="wrapper">
       {errors &&
         errors.map((error) => (
-          <ErrorAlert key={error.message} error={error} onClose={setErrors} errors={errors}/>
+          <ErrorAlert
+            key={error.message}
+            error={error}
+            onClose={setErrors}
+            errors={errors}
+          />
         ))}
       <Header />
       <AccountList />
+      {/* <BillsList /> */}
     </div>
   );
 }
