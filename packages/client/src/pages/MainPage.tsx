@@ -8,6 +8,9 @@ import ErrorAlert from "../components/Errors/ErrorAlert";
 import { $errorsStore } from "../store/ErrorsStore";
 import BillsList from "../components/Bills/BillsList";
 
+import { GetCategory, CategoryTypeEnum } from "../../../contracts";
+import { getCategoriesByType } from "../api/category";
+
 export default function MainPage() {
   const navigate = useNavigate();
   let userName = useStore($userStore);
@@ -22,6 +25,11 @@ export default function MainPage() {
     }
   }, []);
 
+  // const expenseCategoryList = async () => {
+  //   const res = await getCategoriesByType(CategoryTypeEnum.EXPENSE);
+  //   console.log(res);
+  // };
+
   return (
     <div className="wrapper">
       {errors &&
@@ -35,7 +43,7 @@ export default function MainPage() {
         ))}
       <Header />
       <AccountList />
-      {/* <BillsList /> */}
+      <BillsList />
     </div>
   );
 }

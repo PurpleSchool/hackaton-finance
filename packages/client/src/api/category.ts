@@ -6,8 +6,9 @@ export const getCategoriesByType = async (
   type: CategoryTypeEnum
 ): Promise<AxiosResponse<GetCategory.Response>> => {
   const response = await request<GetCategory.Response>({
+    params: { type: type },
     method: "get",
-    url: `category/by-type?type=${type}`,
+    url: `category/by-type`,
   });
   return response;
 };
