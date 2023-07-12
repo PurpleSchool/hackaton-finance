@@ -15,11 +15,11 @@ import { useEvent, useStore } from "effector-react";
 import { AccountDto } from "../../api/account";
 import FormValidationError from "../Form/FormValidationError";
 import {
-  $addAccountPending,
-  addAccount,
+  $createAccountPending,
+  createAccountEvent,
   currencyChanged,
   nameChanged,
-  resetAddAccountPeding,
+  resetCreateAccountPeding,
 } from "../../store/AccountStore";
 import styles from "./account.module.css";
 import { FindAccountsBy } from "../../../../contracts";
@@ -33,7 +33,7 @@ type AddNewAccountModalProps = {
 };
 
 export default function AddNewAccountModal(props: AddNewAccountModalProps) {
-  useEvent(resetAddAccountPeding);
+  useEvent(resetCreateAccountPeding);
   const {
     register,
     handleSubmit,
@@ -51,8 +51,8 @@ export default function AddNewAccountModal(props: AddNewAccountModalProps) {
   nameChanged(watch("name"));
   currencyChanged(watch("currencyId"));
 
-  const formSubmitPending = useStore($addAccountPending);
-  const resetSubmitPending = useEvent(resetAddAccountPeding);
+  const formSubmitPending = useStore($createAccountPending);
+  const resetSubmitPending = useEvent(resetCreateAccountPeding);
 
   useEffect(() => {
     if (formSubmitPending === true) {
@@ -62,10 +62,10 @@ export default function AddNewAccountModal(props: AddNewAccountModalProps) {
   }, [formSubmitPending]);
 
   const onSubmit: SubmitHandler<AccountDto> = (data) => {
-    addAccount(data);
+    createAccountEvent(data);
   };
 
-  const handleClose =  () => {
+  const handleClose = () => {
     props.handleClose(false);
   };
 
@@ -98,11 +98,11 @@ export default function AddNewAccountModal(props: AddNewAccountModalProps) {
             })}
           />
           <FormControl>
-            <InputLabel id="account-currency-label">Currency</InputLabel>
+            <InputLabel id="accountForm-currency-label">Currency</InputLabel>
             <Select
               className={styles["account-currency-select"]}
-              id="account-currency-select"
-              labelId="account-currency-label"
+              id="accountForm-currency-select"
+              labelId="accountForm-currency-label"
               label="Currency"
               defaultValue={0}
               {...register("currencyId", {

@@ -1,11 +1,15 @@
 import { createEvent, createStore } from "effector";
-import { $addAccountRegError, $getAccountsError } from "./AccountStore";
+import { $createAccountRegError, $getAccountsError } from "./AccountStore";
 import { $getCurrencyErrorStore } from "./CurrencyStore";
-import { $usersBillsErrorStore, $accounsBillsErrorStore } from "./BillStore";
-// import {
-//   $updateExpenseCategoriesErrorStore,
-//   $updateIncomeCategoriesErrorStore,
-// } from "./CategoryStore";
+import {
+  $usersBillsErrorStore,
+  $accounsBillsErrorStore,
+  $createBillErrorStore,
+} from "./BillStore";
+import {
+  $updateExpenseCategoriesErrorStore,
+  $updateIncomeCategoriesErrorStore,
+} from "./CategoryStore";
 
 const addError = createEvent<Error>();
 export const $errorsStore = createStore<Error[] | null>(null).on(
@@ -18,7 +22,7 @@ export const $errorsStore = createStore<Error[] | null>(null).on(
       : [error]
 );
 
-$addAccountRegError.watch((error) => {
+$createAccountRegError.watch((error) => {
   if (error) {
     addError(error);
   }
@@ -43,14 +47,20 @@ $accounsBillsErrorStore.watch((error) => {
     addError(error);
   }
 });
-// $updateExpenseCategoriesErrorStore.watch((error) => {
-//   if (error) {
-//     addError(error);
-//   }
-// });
+$updateExpenseCategoriesErrorStore.watch((error) => {
+  if (error) {
+    addError(error);
+  }
+});
 
-// $updateIncomeCategoriesErrorStore.watch((error) => {
-//   if (error) {
-//     addError(error);
-//   }
-// });
+$updateIncomeCategoriesErrorStore.watch((error) => {
+  if (error) {
+    addError(error);
+  }
+});
+
+$createBillErrorStore.watch((error) => {
+  if (error) {
+    addError(error);
+  }
+});

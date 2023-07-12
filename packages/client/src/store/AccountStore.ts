@@ -47,24 +47,27 @@ export const $accountsStore = createStore<FindAccountsBy.Response>(
   .on(updateAccountsStoreFx.doneData, (_, data) => data)
   .on(setAccountsStoreEmpty, (_) => []);
 
-const addAccountFx = createEffect<AccountDto, AccountRes, Error>(
-  async (data) => {
-    return (await createAccount(data)).data;
-  }
+//CREATE ACCOUNT
+
+const createAccountFx = createEffect<AccountDto, AccountRes, Error>(
+  async (data: AccountDto) =>
+    await createAccount(data)
+      .then((res) => res.data)
+      .catch((err) => err)
 );
-export const $addAccountRegError = createStore<Error | null>(null).on(
-  addAccountFx.fail,
+export const $createAccountRegError = createStore<Error | null>(null).on(
+  createAccountFx.failData,
   (_, err) => {
     err;
   }
 );
 
-export const addAccount = createEvent<AccountDto>();
+export const createAccountEvent = createEvent<AccountDto>();
 
-export const resetAddAccountPeding = createEvent();
-export const $addAccountPending = createStore<boolean>(false)
-  .on(addAccountFx.doneData, (_) => true)
-  .reset(resetAddAccountPeding);
+export const resetCreateAccountPeding = createEvent();
+export const $createAccountPending = createStore<boolean>(false)
+  .on(createAccountFx.doneData, (_) => true)
+  .reset(resetCreateAccountPeding);
 
 export const nameChanged = createEvent<string>();
 const $name = createStore<string>("").on(nameChanged, (_, name) => name);
@@ -81,10 +84,10 @@ const $accountCreateFormDataStore = combine<AccountDto>({
 });
 
 sample({
-  clock: addAccount,
+  clock: createAccountEvent,
   source: $accountCreateFormDataStore,
-  filter: addAccountFx.pending.map((pending) => !pending),
-  target: addAccountFx,
+  filter: createAccountFx.pending.map((pending) => !pending),
+  target: createAccountFx,
 });
 
 export const resetPickedAccount = createEvent();
@@ -92,7 +95,3 @@ export const setPickedAccount = createEvent<FindAccount.Response>();
 export const $pickedAccount = createStore<FindAccount.Response | null>(null)
   .on(setPickedAccount, (_, account) => account)
   .reset(resetPickedAccount);
-
-$pickedAccount.watch((acc) =>
-  console.log(acc === null ? "no acc picked" : acc.id)
-);

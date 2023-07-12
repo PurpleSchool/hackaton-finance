@@ -1,13 +1,17 @@
 import { Card, CardContent, Typography } from "@mui/material";
 import styles from "./account.module.css";
-import { resetPickedAccount } from "../../store/AccountStore";
-import { useEvent } from "effector-react";
+import { $pickedAccount, resetPickedAccount } from "../../store/AccountStore";
+import { useEvent, useStore } from "effector-react";
 
 export default function TotalBalanceCard() {
   const reset = useEvent(resetPickedAccount);
+  const isPicked = useStore($pickedAccount) === null ? styles.picked : "";
+
   return (
     <Card
-      className={[styles.accountCard, styles.totalBalanceCard].join(" ")}
+      className={[styles.accountCard, styles.totalBalanceCard, isPicked].join(
+        " "
+      )}
       onClick={() => reset()}
     >
       <CardContent className={styles.cardCoontent_container}>

@@ -1,8 +1,9 @@
 import { createEffect, createEvent, createStore } from "effector";
 import { CreateBill, FindBill, FindBillsBy } from "../../../contracts";
-import { findBillsByUser, findBillsByAccount } from "../api/bill";
+import { findBillsByUser, findBillsByAccount, createBill } from "../api/bill";
 
-//BY USER
+
+//FIND BY USER
 const setUsersBillsStoreEmpty = createEvent();
 export const updateUsersBillsStoreFx = createEffect<
   null,
@@ -37,7 +38,7 @@ export const $usersBillsStore = createStore<FindBillsBy.Response>(
   .on(updateUsersBillsStoreFx.doneData, (_, bills) => bills)
   .on(setUsersBillsStoreEmpty, (_) => []);
 
-//by ACCOUNT
+//FiND BY ACCOUNT
 const setAccountsBillsStoreEmpty = createEvent();
 export const updateAccounsBillsStoreFx = createEffect<
   FindBillsBy.AccountRequest,
@@ -69,3 +70,27 @@ export const $AccounsBillsStore = createStore<FindBillsBy.Response>([]).on(
   (_, bills) => bills
 );
 
+//CREATE
+
+export const createBillFx = createEffect<
+  CreateBill.Request,
+  CreateBill.Response,
+  Error
+>(
+  async (data: CreateBill.Request) =>
+    await createBill(data)
+      .then((res) => res.data)
+      .catch((e) => e)
+);
+
+export const $createBillErrorStore = createStore<Error | null>(null).on(
+  createBillFx.failData,
+  (_, error) => error
+);
+
+
+
+export const resetCreateBillPeding = createEvent();
+export const $createBillPending = createStore<boolean>(false)
+  .on(createBillFx.doneData, (_) => true)
+  .reset(resetCreateBillPeding);

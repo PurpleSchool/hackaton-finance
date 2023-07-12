@@ -2,6 +2,17 @@ import { request } from "../http";
 import { CreateBill, FindBill, FindBillsBy } from "../../../contracts";
 import { AxiosResponse } from "axios";
 
+export enum BillStatusEnum {
+  CANCELED = "canceled",
+  COMPLETED = "completed",
+  PENDING = "pending",
+}
+
+export enum BillTypeEnum {
+  EXPENSE = "expense",
+  INCOME = "income",
+}
+
 export const createBill = async (
   data: CreateBill.Request
 ): Promise<AxiosResponse<CreateBill.Response>> => {

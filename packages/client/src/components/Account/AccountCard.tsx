@@ -12,9 +12,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteAccount } from "../../api/account";
 import { FindAccount } from "../../../../contracts";
 import {
+  $pickedAccount,
   setPickedAccount,
   updateAccountsStoreFx,
 } from "../../store/AccountStore";
+
 
 type AccountCardProps = {
   account: FindAccount.Response;
@@ -26,13 +28,15 @@ export default function AccountCard(props: AccountCardProps) {
     (cur) => cur.id === props.account.currencyId
   );
   const handleDeleteAccount = async () => {
-    const res = await deleteAccount(props.account.id);
+    await deleteAccount(props.account.id);
     updateAccounts(null);
   };
+  const isPicked =
+    useStore($pickedAccount)?.id === props.account.id ? styles.picked : "";
 
   return (
     <Card
-      className={styles.accountCard}
+      className={[styles.accountCard, isPicked].join(" ")}
       onClick={() => setPickedAccount(props.account)}
     >
       <CardActions className={styles["card-actions"]}>

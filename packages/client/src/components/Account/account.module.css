@@ -13,10 +13,6 @@
   background-color: black;
 }
 
-.accountCard:hover + .accountCard {
-  margin-left: 0;
-}
-
 .totalBalanceCard {
   background: url(../../assets/balanceCardBg.svg) no-repeat 60% 60%;
 }
@@ -74,4 +70,8 @@ div.addNew {
   padding: 0;
   display: flex;
   justify-content: flex-end;
+}
+.picked {
+  outline: solid 5px var(--green);
+  margin: 5px;
 }

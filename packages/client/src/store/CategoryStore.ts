@@ -1,8 +1,9 @@
 import { createEffect, createStore } from "effector";
-import { GetCategory, CategoryTypeEnum } from "../../../contracts";
-import { getCategoriesByType } from "../api/category";
+import { GetCategory } from "../../../contracts";
+import { CategoryTypeEnum, getCategoriesByType } from "../api/category";
 
 //EXPENSE
+
 export const updateExpenseCategoryFx = createEffect<
   CategoryTypeEnum,
   GetCategory.Response,
@@ -47,6 +48,3 @@ const initialIncomeCategoryStoreValue = await updateIncomeCategoryFx(
 export const $incomeCategoryStore = createStore<GetCategory.Response>(
   initialIncomeCategoryStoreValue
 ).on(updateExpenseCategoryFx.doneData, (_, categories) => categories);
-
-$incomeCategoryStore.watch((cat) => console.log(cat));
-$expenseCategoryStore.watch((cat) => console.log(cat));
