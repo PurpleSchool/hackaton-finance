@@ -21,7 +21,7 @@ import { useEffect, useId, useState } from "react";
 import { CustomSwitch } from "../CustomSwitch";
 import BasicDateTimePicker from "../DateTimePicker";
 import { TransactionType } from "../../entities/formTypes";
-import TransactionForm from "./transactionForm";
+import TransactionForm from "./TransactionForm";
 import {
   $expenseCategoryStore,
   $incomeCategoryStore,
