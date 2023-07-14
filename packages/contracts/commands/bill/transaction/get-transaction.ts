@@ -20,9 +20,7 @@ const GetTransactionsResponseSchema = z.array(
   }),
 );
 
-export class GetTransactionsResponse extends createZodDto(
-  GetTransactionsResponseSchema,
-) {}
-export class GetTransactionsRequest extends createZodDto(
-  GetTransactionsRequestSchema,
-) {}
+export namespace GetTransaction {
+  export class Request extends createZodDto(GetTransactionsRequestSchema,) {}
+  export class Response extends createZodDto(GetTransactionsResponseSchema,) {}
+}

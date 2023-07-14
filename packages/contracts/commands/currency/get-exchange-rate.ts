@@ -24,14 +24,8 @@ export const GetExchangeRateBadResponseSchema = z.object({
   }),
 });
 
-export class ExchangeRateDto extends createZodDto(
-  GetExchangeRateRequestSchema,
-) {}
-
-export class ExchangeRateResponseDto extends createZodDto(
-  GetExchangeRateResponseSchema,
-) {}
-
-export class ExchangeRateBadResponseDto extends createZodDto(
-  GetExchangeRateBadResponseSchema,
-) {}
+export namespace Exchange {
+  export class Request extends createZodDto(GetExchangeRateRequestSchema,) {}
+  export class Response extends createZodDto(GetExchangeRateResponseSchema,) {}
+  export class BadResponse extends createZodDto(GetExchangeRateBadResponseSchema,) {}
+}

@@ -1,0 +1,21 @@
+.modal_container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  background-color: var(--sidebar-background);
+  padding: 35px;
+  border-radius: 15px;
+}
+
+.formRow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.formRow:not(:last-child) {
+  padding-bottom: 10px;
+}

@@ -54,17 +54,22 @@ model User {
 }
 
 model Account {
-  id      Int    @id @default(autoincrement())
-  name    String
-  ownerId Int
-  bills   Bill[]
+  id         Int    @id @default(autoincrement())
+  name       String
+  ownerId    Int
+  currencyId Int
 
+  bills   Bill[]
   user User @relation(fields: [ownerId], references: [id])
+  currency Currency @relation(fields: [currencyId], references: [id])
+
 }
 
 model Currency {
   id    Int    @id @default(autoincrement())
   name  String
   code  String
+
   bills Bill[]
+  accounts Account[]
 }
