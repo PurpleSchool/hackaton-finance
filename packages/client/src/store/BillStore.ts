@@ -1,7 +1,7 @@
 import { createEffect, createEvent, createStore } from "effector";
 import { CreateBill, FindBill, FindBillsBy } from "../../../contracts";
 import { findBillsByUser, findBillsByAccount, createBill } from "../api/bill";
-
+import { $pickedAccount } from "./AccountStore";
 
 //FIND BY USER
 const setUsersBillsStoreEmpty = createEvent();
@@ -70,6 +70,12 @@ export const $AccounsBillsStore = createStore<FindBillsBy.Response>([]).on(
   (_, bills) => bills
 );
 
+$pickedAccount.watch((acc) => {
+  if (acc) {
+    updateAccounsBillsStoreFx({ accountId: acc.id });
+  }
+});
+
 //CREATE
 
 export const createBillFx = createEffect<
@@ -87,8 +93,6 @@ export const $createBillErrorStore = createStore<Error | null>(null).on(
   createBillFx.failData,
   (_, error) => error
 );
-
-
 
 export const resetCreateBillPeding = createEvent();
 export const $createBillPending = createStore<boolean>(false)

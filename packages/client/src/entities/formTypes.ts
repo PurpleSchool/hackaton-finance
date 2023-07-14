@@ -1,3 +1,5 @@
-import { ITransactionWithId, ITransaction } from "../api/fake/transactionsApi";
-
-export type TransactionsType = ITransactionWithId | ITransaction;
+export type TransactionType = {
+  id: string;
+  sum: number;
+  categoryId: number;
+};

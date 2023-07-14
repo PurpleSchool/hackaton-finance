@@ -1,17 +1,14 @@
 import { Alert, AlertTitle } from "@mui/material";
 import styles from "./errors.module.css";
+import { deleteError } from "../../store/ErrorsStore";
 
 interface IErrorAlertProps {
   error: Error;
-  onClose: React.Dispatch<React.SetStateAction<Error[] | null>>;
-  errors: Error[];
 }
 
 export default function ErrorAlert(props: IErrorAlertProps) {
   const handleOnClose = () => {
-    props.onClose(
-      props.errors.filter((err) => err.message !== props.error.message)
-    );
+    deleteError(props.error);
   };
   return (
     <Alert
@@ -19,8 +16,8 @@ export default function ErrorAlert(props: IErrorAlertProps) {
       className={styles["error-alert"]}
       onClick={() => handleOnClose()}
     >
-      <AlertTitle>Error</AlertTitle>
-      {props.error.name} {props.error.message}
+      <AlertTitle>{props.error.name}</AlertTitle>
+      {props.error.message}
     </Alert>
   );
 }

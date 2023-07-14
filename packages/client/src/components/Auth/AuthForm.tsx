@@ -4,7 +4,6 @@ import styles from "./auth.module.css";
 import { UserDto } from "../../api/user";
 import { ICustomError } from "../../entities/Errors";
 import SvgGenerator from "../../helpers/SvgGenerator";
-import ErrorAlert from "../Errors/ErrorAlert";
 import FormValidationError from "../Form/FormValidationError";
 import { useLocation } from "react-router-dom";
 import { ICustomLocationWithState } from "../../entities/Location";
@@ -82,7 +81,6 @@ export default function AuthForm(props: AuthFormProps) {
             ? "Loading..."
             : "Sing up"}
         </Button>
-        {props.error !== undefined && <ErrorAlert error={props.error} />}
       </Box>
     </>
   );

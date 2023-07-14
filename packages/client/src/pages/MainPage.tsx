@@ -6,13 +6,12 @@ import { useStore } from "effector-react";
 import Header from "../components/Header";
 import ErrorAlert from "../components/Errors/ErrorAlert";
 import { $errorsStore } from "../store/ErrorsStore";
-import BillsList from "../components/Bills/BillsList";
+import Bills from "../components/Bills/Bills";
 
 export default function MainPage() {
   const navigate = useNavigate();
   let userName = useStore($userStore);
-  const [errors, setErrors] = useState(useStore($errorsStore));
-  
+  const errors = useStore($errorsStore);
 
   useEffect(() => {
     if (
@@ -27,17 +26,10 @@ export default function MainPage() {
   return (
     <div className="wrapper">
       {errors &&
-        errors.map((error) => (
-          <ErrorAlert
-            key={error.message}
-            error={error}
-            onClose={setErrors}
-            errors={errors}
-          />
-        ))}
+        errors.map((error) => <ErrorAlert key={error.message} error={error} />)}
       <Header />
       <AccountList />
-      <BillsList />
+      <Bills />
     </div>
   );
 }

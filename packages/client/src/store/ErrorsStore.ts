@@ -11,16 +11,21 @@ import {
   $updateIncomeCategoriesErrorStore,
 } from "./CategoryStore";
 
-const addError = createEvent<Error>();
-export const $errorsStore = createStore<Error[] | null>(null).on(
-  addError,
-  (store, error) =>
+export const addError = createEvent<Error>();
+export const deleteError = createEvent<Error>();
+export const $errorsStore = createStore<Error[] | null>(null)
+  .on(addError, (store, error) =>
     store !== null
       ? store?.find((er) => er.message === error.message)
         ? store
         : [...store, error]
       : [error]
-);
+  )
+  .on(deleteError, (store, error) =>
+    store !== null
+      ? [...store.filter((err) => err.message !== error.message)]
+      : []
+  );
 
 $createAccountRegError.watch((error) => {
   if (error) {

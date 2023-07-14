@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   FormControl,
   FormControlLabel,
   InputLabel,
@@ -16,9 +17,15 @@ import { $accountsStore, $pickedAccount } from "../../store/AccountStore";
 import { CreateBill } from "../../../../contracts";
 import { createBillFx } from "../../store/BillStore";
 import { BillStatusEnum, BillTypeEnum } from "../../api/bill";
-import { useEffect } from "react";
+import { useEffect, useId, useState } from "react";
 import { CustomSwitch } from "../CustomSwitch";
 import BasicDateTimePicker from "../DateTimePicker";
+import { TransactionType } from "../../entities/formTypes";
+import TransactionForm from "./transactionForm";
+import {
+  $expenseCategoryStore,
+  $incomeCategoryStore,
+} from "../../store/CategoryStore";
 
 type AddBillModalProps = {
   open: boolean;
@@ -29,13 +36,13 @@ export default function AddBilllModal(props: AddBillModalProps) {
   const pickedAcc = useStore($pickedAccount);
   const accountsList = useStore($accountsStore);
   const currenciesList = useStore($currencyStore);
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-
-    // formState: { errors, isValid },
+    formState: { errors, isValid },
   } = useForm({
     mode: "onBlur",
     defaultValues: {
@@ -44,11 +51,13 @@ export default function AddBilllModal(props: AddBillModalProps) {
       type: BillTypeEnum.EXPENSE,
       status: BillStatusEnum.PENDING,
       date: new Date(Date.now()),
-      transactions: [],
+      transactions: [{ sum: 0, categoryId: 0 }],
     },
   });
+
   const onSubmit: SubmitHandler<CreateBill.Request> = (data) => {
     createBillFx(data);
+    props.handleClose(false);
   };
   const accountId = watch("accountId");
   useEffect(() => {
@@ -65,7 +74,48 @@ export default function AddBilllModal(props: AddBillModalProps) {
     );
   };
 
-  console.log(watch("date"));
+  const handleChangeDate = (date: Date | undefined) => {
+    if (date !== undefined) {
+      setValue("date", date);
+    }
+  };
+
+  const [transactionsList, setTransactionsList] = useState<TransactionType[]>([
+    { id: useId(), sum: 0, categoryId: 0 },
+  ]);
+
+  const handleAddTransaction = () => {
+    setTransactionsList([
+      ...transactionsList,
+      { id: useId(), sum: 0, categoryId: 0 },
+    ]);
+  };
+
+  const handleChangeTransactions = (changedTransaction: TransactionType) => {
+    setTransactionsList([
+      ...transactionsList.map((transaction) =>
+        transaction.id === changedTransaction.id
+          ? changedTransaction
+          : transaction
+      ),
+    ]);
+  };
+
+  useEffect(() => {
+    setValue(
+      "transactions",
+      transactionsList.map((transaction) => {
+        const { id, ...data } = transaction;
+
+        return data;
+      })
+    );
+  }, [transactionsList]);
+
+  const categoriesList =
+    watch("type") === "expense"
+      ? useStore($expenseCategoryStore)
+      : useStore($incomeCategoryStore);
 
   return (
     <Modal open={props.open} onClose={() => props.handleClose(false)}>
@@ -74,9 +124,9 @@ export default function AddBilllModal(props: AddBillModalProps) {
         className={styles.modal_container}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div>
+        <div className={styles.formRow}>
           {/* ACCOUNT */}
-          <FormControl>
+          <FormControl sx={{ width: "45%" }}>
             <InputLabel id="billForm-account-label">Account</InputLabel>
             <Select
               id="billForm-accoount-select"
@@ -99,7 +149,7 @@ export default function AddBilllModal(props: AddBillModalProps) {
             </Select>
           </FormControl>
           {/* CURRENCY */}
-          <FormControl>
+          <FormControl sx={{ width: "45%" }}>
             <InputLabel id="billForm-currency-label">Currency</InputLabel>
             <Select
               id="billForm-currency-select"
@@ -123,8 +173,11 @@ export default function AddBilllModal(props: AddBillModalProps) {
               ))}
             </Select>
           </FormControl>
+        </div>
+        <div className={styles.formRow}>
           {/* TYPE */}
           <FormControlLabel
+            sx={{ width: "25%", margin: "8px 0px 0px 0px" }}
             control={
               <CustomSwitch onChange={(event) => handleChangeType(event)} />
             }
@@ -132,7 +185,7 @@ export default function AddBilllModal(props: AddBillModalProps) {
             labelPlacement="top"
           />
           {/* STATUS */}
-          <FormControl>
+          <FormControl sx={{ width: "25%", marginTop: "8px" }}>
             <InputLabel id="billForm-status-label">Status</InputLabel>
             <Select
               id="billForm-status-select"
@@ -155,8 +208,36 @@ export default function AddBilllModal(props: AddBillModalProps) {
             </Select>
           </FormControl>
           {/* DATE */}
-          <BasicDateTimePicker  />
+          <BasicDateTimePicker
+            value={watch("date")}
+            handleChange={handleChangeDate}
+          />
         </div>
+        {transactionsList.map((transaction) => (
+          <div key={transaction.id} className={styles.formRow}>
+            <TransactionForm
+              transaction={transaction}
+              categories={categoriesList}
+              handleChange={handleChangeTransactions}
+            />
+          </div>
+        ))}
+        <Button
+          variant="text"
+          onClick={() => handleAddTransaction()}
+          sx={{ marginTop: "20px" }}
+          disabled={true}
+        >
+          + add transaction
+        </Button>
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={!isValid}
+          sx={{ marginTop: "20px" }}
+        >
+          Save the Bill
+        </Button>
       </Box>
     </Modal>
   );

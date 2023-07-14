@@ -9,3 +9,13 @@
   border-radius: 15px;
 }
 
+.formRow {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.formRow:not(:last-child) {
+  padding-bottom: 10px;
+}
