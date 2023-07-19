@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CategoryTypeEnum } from '../../../contracts';
 import { PrismaService } from '../common/database/prisma.service';
 import { Category } from '@prisma/client';
 

@@ -7,6 +7,9 @@ export const FindBillSchema = z.object({
 });
 
 export namespace FindBill {
-	export class Request extends createZodDto(FindBillSchema) {}
-	export class Response extends createZodDto(BillSchema.omit({transactions: true})) {}
+	export const RequestSchema = FindBillSchema;
+	export const ResponseSchema = BillSchema.omit({transactions: true})
+
+	export type Request = z.infer<typeof RequestSchema>
+	export type Response = z.infer<typeof ResponseSchema>
 }

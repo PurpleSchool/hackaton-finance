@@ -1,8 +1,10 @@
 import { z } from 'zod';
-import { createZodDto } from 'nestjs-zod';
 import { AccountSchema } from '../../models';
 
 export namespace FindAccountsBy {
-  export class Request {}
-  export class Response extends createZodDto(z.array(AccountSchema)) {}
+  export const RequestSchema = z.void()
+  export const ResponseSchema = z.array(AccountSchema)
+
+  export type Request = z.infer<typeof RequestSchema>
+  export type Response = z.infer<typeof ResponseSchema>
 }

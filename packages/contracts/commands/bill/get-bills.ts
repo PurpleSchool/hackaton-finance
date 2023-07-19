@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { createZodDto } from "nestjs-zod";
 import { BillSchema } from "./create-bill"
 
 export const FindBillsByAccountSchema = z.object({
@@ -7,6 +6,9 @@ export const FindBillsByAccountSchema = z.object({
 });
   
 export namespace FindBillsBy {
-	export class AccountRequest extends createZodDto(FindBillsByAccountSchema) {}
-	export class Response extends createZodDto(z.array(BillSchema.omit({transactions: true}))) {}
+	export const AccountRequestSchema = FindBillsByAccountSchema
+	export const ResponseSchema = z.array(BillSchema.omit({transactions: true}))
+
+	export type Request = z.infer<typeof AccountRequestSchema>
+	export type Response = z.infer<typeof ResponseSchema>
 }

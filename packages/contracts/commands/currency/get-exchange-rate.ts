@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { createZodDto } from 'nestjs-zod';
 
 export const GetExchangeRateRequestSchema = z.object({
   toCurrency: z.string(),
@@ -25,7 +24,11 @@ export const GetExchangeRateBadResponseSchema = z.object({
 });
 
 export namespace Exchange {
-  export class Request extends createZodDto(GetExchangeRateRequestSchema,) {}
-  export class Response extends createZodDto(GetExchangeRateResponseSchema,) {}
-  export class BadResponse extends createZodDto(GetExchangeRateBadResponseSchema,) {}
+  export const RequestSchema = GetExchangeRateRequestSchema
+  export const ResponseSchema = GetExchangeRateResponseSchema
+  export const BadResponseSchema = GetExchangeRateBadResponseSchema
+
+  export type Request = z.infer<typeof RequestSchema>
+  export type Response = z.infer<typeof ResponseSchema>
+  export type BadResponse = z.infer<typeof BadResponseSchema>
 }

@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { CategoryTypeEnum } from './category.types';
-import { createZodDto } from 'nestjs-zod';
 
 const CategorySchema = 
   z.object({
@@ -10,6 +9,9 @@ const CategorySchema =
   });
 
 export namespace GetCategory {
-  export class Request extends createZodDto(CategorySchema.pick({type: true})) {}
-  export class Response extends createZodDto(z.array(CategorySchema)) {}
+  export const RequestSchema = CategorySchema.pick({type: true})
+  export const ResponseSchema = z.array(CategorySchema)
+
+  export type Request = z.infer<typeof RequestSchema>
+  export type Response = z.infer<typeof ResponseSchema>
 }

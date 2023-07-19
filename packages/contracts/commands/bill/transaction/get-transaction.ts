@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { createZodDto } from 'nestjs-zod';
 import { BillTypeEnum } from '../bill.types';
 
 const GetTransactionsRequestSchema = z.object({
@@ -21,6 +20,9 @@ const GetTransactionsResponseSchema = z.array(
 );
 
 export namespace GetTransaction {
-  export class Request extends createZodDto(GetTransactionsRequestSchema,) {}
-  export class Response extends createZodDto(GetTransactionsResponseSchema,) {}
+  export const RequestSchema = GetTransactionsRequestSchema
+  export const ResponseSchema = GetTransactionsResponseSchema
+
+  export type Request = z.infer<typeof RequestSchema>
+  export type Response = z.infer<typeof ResponseSchema>
 }

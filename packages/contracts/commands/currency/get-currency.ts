@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { createZodDto } from 'nestjs-zod';
 
 
 const GetAllCurrencyResponseSchema = z.array(
@@ -11,6 +10,9 @@ const GetAllCurrencyResponseSchema = z.array(
 );
 
 export namespace GetCurrency {
-  export class Request {}
-  export class Response extends createZodDto(GetAllCurrencyResponseSchema,) {}
+  export const RequestSchema = z.void()
+  export const ResponseSchema = GetAllCurrencyResponseSchema
+
+  export type Request = z.infer<typeof RequestSchema>
+  export type Response = z.infer<typeof ResponseSchema>
 }

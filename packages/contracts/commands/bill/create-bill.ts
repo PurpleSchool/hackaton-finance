@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { createZodDto } from "nestjs-zod";
 import { BillStatusEnum, BillTypeEnum } from "./bill.types";
 
 
@@ -21,7 +20,10 @@ export const BillSchema = z.object({
 });
 
 export namespace CreateBill {
-  export class Request extends createZodDto(BillSchema.omit({id: true, userId: true, createdAt: true,})) {}
-  export class Response extends createZodDto(BillSchema) {}
+  export const RequestSchema = BillSchema.omit({id: true, userId: true, createdAt: true,})
+  export const ResponseSchema = BillSchema
+
+  export type Request = z.infer<typeof RequestSchema>  
+  export type Response = z.infer<typeof ResponseSchema>
 }
 
