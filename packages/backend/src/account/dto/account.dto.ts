@@ -14,4 +14,5 @@ export namespace FindAccountsByDto {
 export namespace FindAccountDto {
   export class Request extends createZodDto(FindAccount.RequestSchema) {}
   export class Response extends createZodDto(FindAccount.ResponseSchema) {}
+  export class ResponseBalance extends createZodDto(FindAccount.ResponseBalanceSchema) {}
 }

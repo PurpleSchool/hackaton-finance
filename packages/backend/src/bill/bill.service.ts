@@ -4,10 +4,12 @@ import { BILL_NOT_FOUND_ERROR } from './bill.constants';
 import { PrismaService } from '../common/database/prisma.service';
 import { Bill } from '@prisma/client';
 import { CreateBillDto } from './dto/bill.dto';
+import { BillStatusEnum, BillTypeEnum } from '../../../contracts';
+import { TransactionService } from './transaction/transaction.service';
 
 @Injectable()
 export class BillService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService, private readonly transactionService: TransactionService) {}
 
   async findBill(id: number) {
     const bill = await this.prisma.bill.findUnique({ where: { id } });
@@ -79,6 +81,28 @@ export class BillService {
     }
 
     return this.mapToModel(updatedBill);
+  }
+
+  async countBillBalanceByAccount(accountId: number) {
+    const bills = await this.prisma.bill.findMany({where: { accountId }})
+    const balance = {
+      expense: 0,
+      income: 0
+    }
+
+    for (const bill of bills) {
+      if (bill.status != BillStatusEnum.COMPLETED) {
+        continue
+      }
+      const billBalance = await this.transactionService.countTransactionValueByBill(bill.id);
+      if (bill.type === BillTypeEnum.INCOME) {
+        balance.income += billBalance
+        continue
+      }
+      balance.expense += billBalance
+    }
+
+    return balance
   }
 
   private mapToModel(bill: Bill) {

@@ -1,4 +1,4 @@
-import { CreateBill, FindBill, FindBillsBy, GetTransaction } from "../../../../contracts";
+import { CreateBill, CreateTransaction, FindBill, FindBillsBy, FindTransaction, FindTransactionsBy } from "../../../../contracts";
 import { createZodDto } from "nestjs-zod";
 
 
@@ -17,7 +17,16 @@ export namespace FindBillsByDto {
 	export class Response extends createZodDto(FindBillsBy.ResponseSchema) {}
 }
 
-export namespace GetTransactionDto {
-  export class Request extends createZodDto(GetTransaction.RequestSchema) {}
-  export class Response extends createZodDto(GetTransaction.ResponseSchema) {}
+export namespace CreateTransactionDto {
+	export class Request extends createZodDto(CreateTransaction.RequestSchema) {}
+	export class Response extends createZodDto(CreateTransaction.ResponseSchema) {}
+}
+export namespace FindTransactionDto {
+  export class Request extends createZodDto(FindTransaction.RequestSchema) {}
+  export class Response extends createZodDto(FindTransaction.ResponseSchema) {}
+}
+
+export namespace FindTransactionsByDto {
+	export class RequestBill extends createZodDto(FindTransactionsBy.RequestBillSchema) {}
+	export class Response extends createZodDto(FindTransactionsBy.ResponseSchema) {}
 }

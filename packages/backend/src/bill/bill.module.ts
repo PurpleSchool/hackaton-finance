@@ -7,5 +7,6 @@ import { BillController } from './bill.controller';
   imports: [TransactionModule],
   providers: [BillService],
   controllers: [BillController],
+  exports: [BillService]
 })
 export class BillModule {}

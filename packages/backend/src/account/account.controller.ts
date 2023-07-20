@@ -7,7 +7,7 @@ import { AccountDto, FindAccountDto, FindAccountsByDto } from './dto/account.dto
 
 @Controller('account')
 export class AccountController {
-  constructor(private accountService: AccountService) {}
+  constructor(private readonly accountService: AccountService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
@@ -34,5 +34,10 @@ export class AccountController {
   @Delete(':id')
   async delete(@Param() { id }: FindAccountDto.Request): Promise<AccountDto.Response> {
     return this.accountService.deleteAccount(id);
+  }
+
+  @Get(':id/balance')
+  async countBalance (@Param() { id }: FindAccountDto.Request): Promise<FindAccountDto.ResponseBalance> {
+    return this.accountService.countBalance(id) 
   }
 }

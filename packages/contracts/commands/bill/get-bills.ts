@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BillSchema } from "./create-bill"
+import { BillSchemaResponse } from "./create-bill"
 
 export const FindBillsByAccountSchema = z.object({
 	accountId: z.string().transform((value) => Number(value)),
@@ -7,7 +7,7 @@ export const FindBillsByAccountSchema = z.object({
   
 export namespace FindBillsBy {
 	export const AccountRequestSchema = FindBillsByAccountSchema
-	export const ResponseSchema = z.array(BillSchema.omit({transactions: true}))
+	export const ResponseSchema = z.array(BillSchemaResponse.omit({transactions: true}))
 
 	export type Request = z.infer<typeof AccountRequestSchema>
 	export type Response = z.infer<typeof ResponseSchema>
