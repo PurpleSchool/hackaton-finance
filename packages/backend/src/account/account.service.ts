@@ -2,11 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ACCOUNT_NOT_FOUND_ERROR } from './account.constants';
 import { PrismaService } from '../common/database/prisma.service';
 import { AccountDto } from './dto/account.dto';
-import { BillService } from '../bill/bill.service';
 
 @Injectable()
 export class AccountService {
-  constructor(private readonly prisma: PrismaService, private readonly billService: BillService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async createAccount(dto: AccountDto.Request, userId: number) {
     const account = this.prisma.account.create({
@@ -48,10 +47,5 @@ export class AccountService {
     }
 
     return deletedAccount;
-  }
-
-  async countBalance(accountId: number) {
-    const billBalance = await this.billService.countBillBalanceByAccount(accountId)
-    return {balance: billBalance.income - billBalance.expense}
   }
 }

@@ -4,10 +4,11 @@ import { User } from '../common/decorators/user.decorator';
 import { JwtAuthGuard } from '../user/guards/jwt.guard';
 import { UserInfo } from '../user/user.interface';
 import { AccountDto, FindAccountDto, FindAccountsByDto } from './dto/account.dto';
+import { BillService } from '../bill/bill.service';
 
 @Controller('account')
 export class AccountController {
-  constructor(private readonly accountService: AccountService) {}
+  constructor(private readonly accountService: AccountService, private readonly billService: BillService) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
@@ -38,6 +39,7 @@ export class AccountController {
 
   @Get(':id/balance')
   async countBalance (@Param() { id }: FindAccountDto.Request): Promise<FindAccountDto.ResponseBalance> {
-    return this.accountService.countBalance(id) 
+    const billBalance = await this.billService.countBillBalanceByAccount(id)
+    return {balance: billBalance.income - billBalance.expense}
   }
 }
