@@ -1,7 +1,7 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { JwtAuthGuard } from '../user/guards/jwt.guard';
-import {  CategoryTypeEnum, GetCategory } from '../../../contracts';
+import { GetCategoryDto } from './dto/category.dto';
 
 @Controller('category')
 export class CategoryController {
@@ -10,8 +10,8 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard)
   @Get('by-type')
   public async getByType(
-    @Query() { type }: GetCategory.Request,
-  ): Promise<GetCategory.Response> {
+    @Query() { type }: GetCategoryDto.Request,
+  ): Promise<GetCategoryDto.Response> {
     return this.categoryService.getByType(type);
   }
 }

@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ACCOUNT_NOT_FOUND_ERROR } from './account.constants';
 import { PrismaService } from '../common/database/prisma.service';
-import { Account } from '../../../contracts';
+import { AccountDto } from './dto/account.dto';
 
 @Injectable()
 export class AccountService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createAccount(dto: Account.Request, userId: number) {
+  async createAccount(dto: AccountDto.Request, userId: number) {
     const account = this.prisma.account.create({
       data: {
         name: dto.name,

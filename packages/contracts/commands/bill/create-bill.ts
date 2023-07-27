@@ -1,9 +1,17 @@
 import { z } from "zod";
-import { createZodDto } from "nestjs-zod";
 import { BillStatusEnum, BillTypeEnum } from "./bill.types";
+import { TransactionSchema } from "./transaction";
 
+export const BillSchemaRequest = z.object({
+  accountId: z.number(),
+  currencyId: z.number(),
+  type: z.nativeEnum(BillTypeEnum),
+  status: z.nativeEnum(BillStatusEnum),
+  date: z.coerce.date(),
+  transactions: z.array(TransactionSchema.omit({id: true, createdAt: true, billId: true})),
+});
 
-export const BillSchema = z.object({
+export const BillSchemaResponse = z.object({
   id: z.number(),
   userId: z.number(),
   accountId: z.number(),
@@ -12,16 +20,15 @@ export const BillSchema = z.object({
   status: z.nativeEnum(BillStatusEnum),
   date: z.coerce.date(),
   createdAt: z.coerce.date(),
-  transactions: z.array(
-    z.object({
-      sum: z.number(),
-      categoryId: z.number(),
-    })
-  ),
+  transactions: z.array(TransactionSchema),
 });
 
+
 export namespace CreateBill {
-  export class Request extends createZodDto(BillSchema.omit({id: true, userId: true, createdAt: true,})) {}
-  export class Response extends createZodDto(BillSchema) {}
+  export const RequestSchema = BillSchemaRequest
+  export const ResponseSchema = BillSchemaResponse
+
+  export type Request = z.infer<typeof RequestSchema>  
+  export type Response = z.infer<typeof ResponseSchema>
 }
 

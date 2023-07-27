@@ -1,10 +1,10 @@
 import { HttpService } from '@nestjs/axios';
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { AxiosError } from 'axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { IntegrationsOptions } from '../integration.types';
 import { INTEGRATION_MODULE_OPTIONS } from '../integration.constants';
-import { Exchange } from '../../../../contracts';
+import { ExchangeDto } from '../../currency/dto/currency.dto';
 
 @Injectable()
 export class MarketService {
@@ -16,11 +16,11 @@ export class MarketService {
     private readonly httpService: HttpService,
   ) {}
 
-  public async getExchangeRateByDate({ toCurrency, fromCurrencies, date }: Exchange.Request) {
+  public async getExchangeRateByDate({ toCurrency, fromCurrencies, date }: ExchangeDto.Request) {
     const symbols = fromCurrencies.join(',');
     const { data } = await firstValueFrom(
       this.httpService
-        .get<Exchange.Response | Exchange.BadResponse>(
+        .get<ExchangeDto.Response | ExchangeDto.BadResponse>(
           `${URL}/${date}?base=${toCurrency}&symbols=${symbols}`,
           {
             headers: { apiKey: this.options.apiKey },
@@ -28,18 +28,21 @@ export class MarketService {
         )
         .pipe(
           catchError((error: AxiosError) => {
-            throw new HttpException(error.message, error.status);
+            if (error.status) {
+              throw new HttpException(error.message, error.status);
+            }
+            throw new ServiceUnavailableException(error.message)
           }),
         ),
     );
     return data;
   }
 
-  public async getExchangeRateLatest({ toCurrency, fromCurrencies }: Exchange.Request) {
+  public async getExchangeRateLatest({ toCurrency, fromCurrencies }: ExchangeDto.Request) {
     const symbols = fromCurrencies.join(',');
     const { data } = await firstValueFrom(
       this.httpService
-        .get<Exchange.Response | Exchange.BadResponse>(
+        .get<ExchangeDto.Response | ExchangeDto.BadResponse>(
           `${URL}/latest?base=${toCurrency}&symbols=${symbols}`,
           {
             headers: { apiKey: this.options.apiKey },
@@ -47,7 +50,10 @@ export class MarketService {
         )
         .pipe(
           catchError((error: AxiosError) => {
-            throw new HttpException(error.message, error.status);
+            if (error.status) {
+              throw new HttpException(error.message, error.status);
+            }
+            throw new ServiceUnavailableException(error.message)
           }),
         ),
     );
