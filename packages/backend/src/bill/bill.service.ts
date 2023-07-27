@@ -22,9 +22,6 @@ export class BillService {
 
   async findBillsByUserId(userId: number) {
     const bill = await this.prisma.bill.findMany({ where: { userId } });
-    if (!bill.length) {
-      throw new NotFoundException();
-    }
 
     return bill.map(this.mapToModel);
   }
@@ -33,9 +30,6 @@ export class BillService {
     const bill = await this.prisma.bill.findMany({
       where: { accountId },
     });
-    if (!bill.length) {
-      throw new NotFoundException();
-    }
 
     return bill.map(this.mapToModel);
   }

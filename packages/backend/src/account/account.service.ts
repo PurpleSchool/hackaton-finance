@@ -33,9 +33,6 @@ export class AccountService {
         ownerId: userId,
       },
     });
-    if (!accountsByOwner.length) {
-      throw new NotFoundException();
-    }
 
     return accountsByOwner;
   }
