@@ -1,12 +1,13 @@
 import { Button, Typography } from "@mui/material";
-import usePageTitle from "../../hooks/usePageTitle";
 import { Link, useNavigate } from "react-router-dom";
-import styles from "../../components/Auth/auth.module.css";
-import AuthForm from "../../components/Auth/AuthForm";
+import styles from "./auth.module.css";
 import { SubmitHandler } from "react-hook-form";
-import { UserDto, regUser } from "../../api/user";
 import { useState } from "react";
-import { ICustomError } from "../../entities/Errors";
+import { ICustomError } from "../../entities/types/Errors";
+import { usePageTitle } from "../../shared";
+import { User } from "../../../../contracts";
+import { userModel } from "../../entities";
+import { AuthForm } from "../../features";
 
 export default function RegistrationPage() {
   usePageTitle("Registration");
@@ -16,10 +17,10 @@ export default function RegistrationPage() {
   const [error, setError] = useState<ICustomError>();
   const [loading, setLoading] = useState(false);
 
-  const onSunmit: SubmitHandler<UserDto> = async (data: UserDto) => {
+  const onSunmit: SubmitHandler<User.Request> = async (data: User.Request) => {
     setLoading(true);
     try {
-      const responce = await regUser(data);
+      await userModel.registrationFx(data);
     } catch (error) {
       const customError = error as ICustomError;
       setError(customError);

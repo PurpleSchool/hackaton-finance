@@ -1,13 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Typography } from "@mui/material";
-import usePageTitle from "../../hooks/usePageTitle";
-import styles from "../../components/Auth/auth.module.css";
-import AuthForm from "../../components/Auth/AuthForm";
 import { SubmitHandler } from "react-hook-form";
-import { UserDto, loginUser } from "../../api/user";
 import { useState } from "react";
-import { setUser } from "../../store/UserStore";
-import { ICustomError } from "../../entities/Errors";
+import { ICustomError } from "../../entities/types/Errors";
+import { usePageTitle } from "../../shared";
+import { User } from "../../../../contracts";
+import { userModel } from "../../entities";
+import { AuthForm } from "../../features";
+import styles from './auth.module.css'
 
 export default function LoginPage() {
   usePageTitle("Login");
@@ -17,12 +17,10 @@ export default function LoginPage() {
   const [error, setError] = useState<ICustomError>();
   const [loading, setLoading] = useState(false);
 
-  const onSunmit: SubmitHandler<UserDto> = async (data: UserDto) => {
+  const onSunmit: SubmitHandler<User.Request> = async (data: User.Request) => {
     setLoading(true);
     try {
-      const responce = await loginUser(data);
-      localStorage.setItem("token", responce.data.accessToken);
-      setUser(data.name);
+      await userModel.loginFx(data);
     } catch (error) {
       const customError = error as ICustomError;
       setError(customError);
