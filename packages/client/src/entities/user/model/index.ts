@@ -3,33 +3,37 @@ import { useStore } from "effector-react";
 import { User } from "../../../../../contracts";
 import { userApi } from "..";
 
-type loginData = User.LoginResponse & { name: string };
+const setName = createEvent<string>();
 
-export const loginFx = createEffect<User.Request, loginData, Error>(
+export const loginFx = createEffect<User.Request, User.LoginResponse, Error>(
   async (data: User.Request) =>
     await userApi
       .login(data)
       .then((res) => res.data)
+      .then((res) => {
+        localStorage.setItem("token", res.accessToken);
+        setName(data.name);
+      })
       .catch((e) => e)
 );
 
 export const registrationFx = createEffect<User.Request, User.RegisterResponse>(
   async (data: User.Request) =>
-  await userApi
-  .registration(data)
-  .then((res) => res.data)
-  .catch((e) => e)
-  );
-  
+    await userApi
+      .registration(data)
+      .then((res) => res.data)
+      .catch((e) => e)
+);
+
 export const logout = createEvent();
 
 const initialStore = localStorage.getItem("user") || null;
 
 const $userStore = createStore<string | null>(initialStore)
-  .on(loginFx.doneData, (_, payload) => {
-    localStorage.setItem("user", payload.name);
-    return payload.name;
+  .on(setName, (_, payload) => {
+    localStorage.setItem("user", payload);
+    return payload;
   })
   .on(logout, () => null);
 
-export const useName =() => useStore($userStore);
+export const useName = () => useStore($userStore);

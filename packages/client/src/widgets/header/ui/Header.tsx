@@ -6,6 +6,7 @@ import { userModel } from "../../../entities";
 
 export function Header() {
   const navigate = useNavigate();
+
   return (
     <header className="header">
       <Typography>Hello, {userModel.useName()}!</Typography>
