@@ -1,0 +1,8 @@
+.authPage {
+    flex-direction: column;
+    width: 600px;
+    max-height: 800px;
+    justify-content: space-around;
+    align-items: center;
+    min-height: 800px;
+  }
