@@ -1,7 +1,7 @@
 import { createStore } from "effector";
-import { currencyApi } from "..";
 import { GetCurrency } from "../../../../../contracts";
 import { useStore } from "effector-react";
+import { currencyApi } from "../api";
 
 const initialCurrencyStore = await currencyApi
   .get()

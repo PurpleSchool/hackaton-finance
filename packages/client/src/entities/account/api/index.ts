@@ -2,7 +2,7 @@ import { Account, FindAccount, FindAccountsBy } from "../../../../../contracts";
 import { AxiosResponse } from "axios";
 import { request } from "../../../shared";
 
-export const create = async (
+const create = async (
   data: Account.Request
 ): Promise<AxiosResponse<Account.Response>> => {
   const responce = await request<Account.Response>({
@@ -13,7 +13,7 @@ export const create = async (
   return responce;
 };
 
-export const findById = async (
+const findById = async (
   id: FindAccount.Request
 ): Promise<AxiosResponse<FindAccount.Response>> => {
   const responce = await request<FindAccount.Response>({
@@ -23,7 +23,7 @@ export const findById = async (
   return responce;
 };
 
-export const findByOwner = async (): Promise<
+const findByOwner = async (): Promise<
   AxiosResponse<FindAccountsBy.Response>
 > => {
   const responce = await request<FindAccountsBy.Response>({
@@ -33,7 +33,7 @@ export const findByOwner = async (): Promise<
   return responce;
 };
 
-export const remove = async (
+const remove = async (
   id: number
 ): Promise<AxiosResponse<FindAccount.Response>> => {
   const responce = await request<FindAccount.Response>({
@@ -42,3 +42,15 @@ export const remove = async (
   });
   return responce;
 };
+
+const getBalance = async (
+  id: number
+): Promise<AxiosResponse<FindAccount.ResponseBalance>> => {
+  const responce = await request<FindAccount.ResponseBalance>({
+    method: "get",
+    url: "account/" + id + "/balance",
+  });
+  return responce;
+};
+
+export const accountApi = { getBalance, remove, findById, findByOwner, create };

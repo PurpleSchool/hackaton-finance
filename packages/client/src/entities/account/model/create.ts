@@ -6,7 +6,8 @@ import {
   sample,
 } from "effector";
 import { Account } from "../../../../../contracts";
-import { accountApi } from "..";
+import { accountApi } from "../api";
+
 
 export const createFx = createEffect<Account.Request, Account.Response, Error>(
   async (data: Account.Request) =>

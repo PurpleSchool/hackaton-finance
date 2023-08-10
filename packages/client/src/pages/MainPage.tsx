@@ -1,11 +1,12 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { userModel } from "../entities";
+// import { useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { userModel } from "../entities";
 import { Header, SideBar } from "../widgets";
 import { BillsList } from "../features/bill";
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function MainPage() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // useEffect(() => {
   //   if (
@@ -18,6 +19,7 @@ export default function MainPage() {
 
   return (
     <div className="wrapper">
+      <Toaster/>
       <SideBar />
       <div className="content_container">
         <Header />

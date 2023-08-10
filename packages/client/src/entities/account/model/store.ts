@@ -1,6 +1,6 @@
 import { createEffect, createEvent, createStore } from "effector";
 import { FindAccountsBy } from "../../../../../contracts";
-import { accountApi } from "..";
+import { accountApi } from "../api";
 import { useStore } from "effector-react";
 
 export const updateAccountsFx = createEffect<
