@@ -1,0 +1,11 @@
+.form_container {
+  width: 100%;
+}
+
+.formItem {
+  width: 100%;
+}
+
+.formItem:not(:last-child) {
+  padding-bottom: 10px;
+}  
